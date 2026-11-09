@@ -47,8 +47,8 @@ body[data-tapet=verd] #table{background:radial-gradient(ellipse at 50% 45%,#2386
 body[data-tapet=blau] #table{background:radial-gradient(ellipse at 50% 45%,#2a6aa8,#1b4b7d 55%,#0f2c4d)}
 body[data-tapet=vermell] #table{background:radial-gradient(ellipse at 50% 45%,#a33232,#7a1f22 55%,#4a1013)}
 body[data-tapet=fusta] #table{background:radial-gradient(ellipse at 50% 45%,#9b6a3c,#7a4f2a 55%,#4e3019)}
-#deco{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.5}
-#deco img{width:min(62%,460px)}
+#deco{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.85}
+#deco img{width:min(62%,460px);filter:saturate(1.25) brightness(1.08) drop-shadow(0 3px 6px rgba(0,0,0,.35))}
 
 .seat{position:absolute;display:flex;align-items:center;gap:6px;z-index:3}
 .seat .nm{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:2px 10px;font-size:13px;font-weight:600;white-space:nowrap}
@@ -633,7 +633,7 @@ const OPTS = [
   { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
 ];
 const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
-const APP_VERSION = '1.1.1', APP_DATE = '2026-11-09';
+const APP_VERSION = '1.1.2', APP_DATE = '2026-11-09';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
