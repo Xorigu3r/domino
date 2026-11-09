@@ -56,14 +56,14 @@ body[data-tapet^=marbre] #table{background:radial-gradient(ellipse at 45% 35%,rg
 body[data-tapet^=marbre] #table::before{display:none}
 body[data-tapet^=marbre] #deco{opacity:.95}
 body[data-tapet^=marbre] #deco img{filter:saturate(1.3) drop-shadow(0 0 1px rgba(70,45,20,.9)) drop-shadow(0 0 1px rgba(70,45,20,.6)) drop-shadow(0 2px 3px rgba(0,0,0,.2))}
-/* Rodona: un cercle de veritat (diàmetre = el costat més curt de l'espai), centrat; fora, el bar fosc */
+/* Quadrada: un quadrat de veritat (costat = el costat més curt de l'espai), centrat; fora, el bar fosc */
 body[data-tapet=marbre] #table{container-type:size;background:none;box-shadow:none;overflow:visible}
 body[data-tapet=marbre] #table>*{--D:min(100cqw,100cqh)}
-body[data-tapet=marbre] #table::before{display:block;content:"";position:absolute;left:50%;top:50%;width:min(100cqw,100cqh);height:min(100cqw,100cqh);transform:translate(-50%,-50%);border-radius:50%;opacity:1;mix-blend-mode:normal;
-  background:radial-gradient(circle at 45% 35%,rgba(255,255,255,.45),rgba(255,255,255,0) 55%),radial-gradient(circle,rgba(0,0,0,0) 62%,rgba(60,50,40,.2) 100%),url(img/marbre.jpg) center/cover;
+body[data-tapet=marbre] #table::before{display:block;content:"";position:absolute;left:50%;top:50%;width:min(100cqw,100cqh);height:min(100cqw,100cqh);transform:translate(-50%,-50%);border-radius:16px;opacity:1;mix-blend-mode:normal;
+  background:radial-gradient(circle at 45% 35%,rgba(255,255,255,.45),rgba(255,255,255,0) 55%),radial-gradient(circle,rgba(0,0,0,0) 70%,rgba(60,50,40,.18) 100%),url(img/marbre.jpg) center/cover;
   box-shadow:inset 0 0 0 3px #eef1f4,inset 0 0 0 6px #a9b0b7,inset 0 0 0 8px #6f767d,inset 0 2px 14px rgba(0,0,0,.25),0 12px 28px rgba(0,0,0,.75)}
 body[data-tapet=marbre] #deco img{width:calc(var(--D)*.62)}
-body[data-tapet=marbre] #board{top:calc(50% - var(--D)*.36);bottom:calc(50% - var(--D)*.36);left:calc(50% - var(--D)*.37);right:calc(50% - var(--D)*.37)}
+body[data-tapet=marbre] #board{top:calc(50% - var(--D)*.40);bottom:calc(50% - var(--D)*.47);left:calc(50% - var(--D)*.38);right:calc(50% - var(--D)*.38)}
 body[data-tapet=marbre] #seat2{top:calc(50% - var(--D)*.5 + var(--D)*.035)}
 body[data-tapet=marbre] #seat1{right:calc(50% - var(--D)*.5 + var(--D)*.02)} body[data-tapet=marbre] #seat3{left:calc(50% - var(--D)*.5 + var(--D)*.02)}
 body[data-tapet=marbre] .bub.b2{top:calc(50% - var(--D)*.5 + var(--D)*.035 + 36px)}
@@ -439,7 +439,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} para nosotros','+{0} per a ells':'+{0} para ellos','Continuar':'Continuar','Continuar ({0})':'Continuar ({0})',
     'Hem guanyat la partida!':'¡Hemos ganado la partida!','Han guanyat ells':'Han ganado ellos','Tornar al menú':'Volver al menú',
     'Mà':'Mano','Resultat':'Resultado','Marcador':'Marcador','Encara no hi ha cap mà acabada.':'Aún no hay ninguna mano terminada.',
-    'Aspecte':'Aspecto','So':'Sonido','Joc':'Juego','Idioma':'Idioma','Automàtic':'Automático','Tapet':'Tapete','Verd':'Verde','Blau':'Azul','Vermell':'Rojo','Fusta':'Madera','Marbre (rodona)':'Mármol (redonda)','Marbre (rectangular)':'Mármol (rectangular)',
+    'Aspecte':'Aspecto','So':'Sonido','Joc':'Juego','Idioma':'Idioma','Automàtic':'Automático','Tapet':'Tapete','Verd':'Verde','Blau':'Azul','Vermell':'Rojo','Fusta':'Madera','Marbre (quadrada)':'Mármol (cuadrada)','Marbre (rectangular)':'Mármol (rectangular)',
     'Velocitat':'Velocidad','Lenta':'Lenta','Ràpida':'Rápida','Sons':'Sonidos','Sí':'Sí','No':'No','Volum':'Volumen',
     'Què es compta':'Qué se cuenta','Tots els punts':'Todos los puntos','Només els dels contraris':'Solo los de los contrarios',
     'Qui surt':'Quién sale','Qui guanya la mà':'Quien gana la mano','Per torn':'Por turno','Doble 6 sempre':'Doble 6 siempre',
@@ -500,7 +500,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} pour nous','+{0} per a ells':'+{0} pour eux','Continuar':'Continuer','Continuar ({0})':'Continuer ({0})',
     'Hem guanyat la partida!':'Nous avons gagné la partie !','Han guanyat ells':'Ils ont gagné','Tornar al menú':'Retour au menu',
     'Mà':'Manche','Resultat':'Résultat','Marcador':'Score','Encara no hi ha cap mà acabada.':"Aucune manche terminée pour l'instant.",
-    'Aspecte':'Apparence','So':'Son','Joc':'Jeu','Idioma':'Langue','Automàtic':'Automatique','Tapet':'Tapis','Verd':'Vert','Blau':'Bleu','Vermell':'Rouge','Fusta':'Bois','Marbre (rodona)':'Marbre (ronde)','Marbre (rectangular)':'Marbre (rectangulaire)',
+    'Aspecte':'Apparence','So':'Son','Joc':'Jeu','Idioma':'Langue','Automàtic':'Automatique','Tapet':'Tapis','Verd':'Vert','Blau':'Bleu','Vermell':'Rouge','Fusta':'Bois','Marbre (quadrada)':'Marbre (carrée)','Marbre (rectangular)':'Marbre (rectangulaire)',
     'Velocitat':'Vitesse','Lenta':'Lente','Ràpida':'Rapide','Sons':'Sons','Sí':'Oui','No':'Non','Volum':'Volume',
     'Què es compta':'Ce qui compte','Tots els punts':'Tous les points','Només els dels contraris':'Seulement ceux des adversaires',
     'Qui surt':'Qui commence','Qui guanya la mà':'Le gagnant de la manche','Per torn':'À tour de rôle','Doble 6 sempre':'Toujours le double 6',
@@ -561,7 +561,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} for us','+{0} per a ells':'+{0} for them','Continuar':'Continue','Continuar ({0})':'Continue ({0})',
     'Hem guanyat la partida!':'We won the game!','Han guanyat ells':'They won','Tornar al menú':'Back to menu',
     'Mà':'Hand','Resultat':'Result','Marcador':'Score','Encara no hi ha cap mà acabada.':'No hand finished yet.',
-    'Aspecte':'Look','So':'Sound','Joc':'Game','Idioma':'Language','Automàtic':'Automatic','Tapet':'Table','Verd':'Green','Blau':'Blue','Vermell':'Red','Fusta':'Wood','Marbre (rodona)':'Marble (round)','Marbre (rectangular)':'Marble (rectangular)',
+    'Aspecte':'Look','So':'Sound','Joc':'Game','Idioma':'Language','Automàtic':'Automatic','Tapet':'Table','Verd':'Green','Blau':'Blue','Vermell':'Red','Fusta':'Wood','Marbre (quadrada)':'Marble (square)','Marbre (rectangular)':'Marble (rectangular)',
     'Velocitat':'Speed','Lenta':'Slow','Ràpida':'Fast','Sons':'Sounds','Sí':'Yes','No':'No','Volum':'Volume',
     'Què es compta':'What counts','Tots els punts':'All points','Només els dels contraris':"Only the opponents'",
     'Qui surt':'Who leads','Qui guanya la mà':'Winner of the hand','Per torn':'In turn','Doble 6 sempre':'Always double six',
@@ -641,7 +641,7 @@ function applyLang() {
 /* ---------- Opcions ---------- */
 const OPTS = [
   { k: 'idioma', g: 'Aspecte', l: 'Idioma', d: 'auto', v: [['auto', 'Automàtic'], ['ca', 'Català'], ['es', 'Español'], ['fr', 'Français'], ['en', 'English']] },
-  { k: 'tapet', g: 'Aspecte', l: 'Tapet', d: 'verd', v: [['verd', 'Verd'], ['blau', 'Blau'], ['vermell', 'Vermell'], ['fusta', 'Fusta'], ['marbre', 'Marbre (rodona)'], ['marbreq', 'Marbre (rectangular)']] },
+  { k: 'tapet', g: 'Aspecte', l: 'Tapet', d: 'verd', v: [['verd', 'Verd'], ['blau', 'Blau'], ['vermell', 'Vermell'], ['fusta', 'Fusta'], ['marbre', 'Marbre (quadrada)'], ['marbreq', 'Marbre (rectangular)']] },
   { k: 'so', g: 'So', l: 'Sons', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
   { k: 'vol', g: 'So', l: 'Volum', d: '70', range: true },
   { k: 'bar', g: 'So', l: 'So de fons de bar', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
@@ -653,7 +653,7 @@ const OPTS = [
   { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
 ];
 const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
-const APP_VERSION = '1.2', APP_DATE = '2026-11-09';
+const APP_VERSION = '1.2.1', APP_DATE = '2026-11-09';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
