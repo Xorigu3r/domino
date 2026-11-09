@@ -1,0 +1,12 @@
+{
+  "name": "Dòmino · Xoriguer",
+  "short_name": "Dòmino",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
+  "icons": [
+    { "src": "img/icona.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icona-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

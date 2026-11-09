@@ -1,0 +1,1488 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Dòmino · Xoriguer</title>
+<link rel="icon" href="img/icona.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0a09">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<style>
+:root{
+  --gold:#f7931e; --cream:#faf4e8; --bg:#0b0a09;
+  --ui:#2b2622; --ui2:#3a322b; --ui3:#4a4037; --txt:#f3ece2; --mut:#b9ac9c;
+  --tw:clamp(28px,min(11.5vw,7.6vh),62px);
+  --feltre:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font:15px/1.35 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;overflow:hidden}
+body{display:flex;flex-direction:column;height:100dvh;
+  background:radial-gradient(ellipse at 50% 40%,#2a1a0a 0%,#0b0a09 65%)}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* ---------- Capçalera ---------- */
+header{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#000;border-bottom:2px solid var(--gold);flex:none;
+  padding-top:max(6px,env(safe-area-inset-top))}
+header img{width:32px;height:32px;border-radius:7px}
+header .ttl{font-weight:900;font-style:italic;font-size:19px;letter-spacing:.5px;color:var(--cream)}
+header .ttl small{display:block;font-style:normal;font-weight:700;font-size:9px;letter-spacing:3px;color:var(--gold);margin-top:-3px}
+#score{margin-left:auto;display:flex;gap:6px;align-items:center;font-variant-numeric:tabular-nums}
+#score .sc{background:#1b1714;border:1px solid #3b3128;border-radius:8px;padding:2px 9px;text-align:center;min-width:62px}
+#score .sc b{display:block;font-size:18px;color:var(--cream);line-height:1.1}
+#score .sc span{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+#score .sc.us b{color:var(--gold)}
+#score .tg{font-size:11px;color:var(--mut)}
+.tools{display:flex;gap:4px}
+.tools button{background:#1b1714;border:1px solid #3b3128;border-radius:8px;width:36px;height:36px;font-size:17px;display:grid;place-items:center}
+.tools button:hover{border-color:var(--gold)}
+
+/* ---------- Tapet ---------- */
+#table{position:relative;flex:1;min-height:0;margin:6px;border-radius:18px;overflow:hidden;
+  box-shadow:inset 0 0 0 3px #3a2412,inset 0 0 0 7px #5b3a1e,inset 0 0 40px rgba(0,0,0,.6),0 6px 20px rgba(0,0,0,.6)}
+#table::before{content:"";position:absolute;inset:0;background:var(--feltre);opacity:.55;pointer-events:none;mix-blend-mode:multiply}
+body[data-tapet=verd] #table{background:radial-gradient(ellipse at 50% 45%,#23864d,#14603a 55%,#0b3d24)}
+body[data-tapet=blau] #table{background:radial-gradient(ellipse at 50% 45%,#2a6aa8,#1b4b7d 55%,#0f2c4d)}
+body[data-tapet=vermell] #table{background:radial-gradient(ellipse at 50% 45%,#a33232,#7a1f22 55%,#4a1013)}
+body[data-tapet=fusta] #table{background:radial-gradient(ellipse at 50% 45%,#9b6a3c,#7a4f2a 55%,#4e3019)}
+#deco{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.10}
+#deco img{width:min(60%,420px)}
+
+.seat{position:absolute;display:flex;align-items:center;gap:6px;z-index:3}
+.seat .nm{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:2px 10px;font-size:13px;font-weight:600;white-space:nowrap}
+.seat .nm i{font-style:normal;color:var(--mut);font-weight:400;font-size:11px;margin-left:4px}
+.seat.turn .nm{border-color:var(--gold);color:#fff;animation:glow 1.2s ease-in-out infinite alternate}
+@keyframes glow{from{box-shadow:0 0 0 rgba(247,147,30,0)}to{box-shadow:0 0 14px rgba(247,147,30,.9)}}
+.seat .backs{display:flex;gap:2px}
+.back{width:calc(var(--tw)*.32);height:calc(var(--tw)*.64);border-radius:3px;background:linear-gradient(145deg,#2c2520,#120e0b);border:1px solid #6b5640;box-shadow:0 1px 2px rgba(0,0,0,.5);position:relative}
+.back::after{content:"";position:absolute;left:50%;top:50%;width:30%;height:15%;transform:translate(-50%,-50%);border-radius:50%;background:var(--gold);opacity:.8}
+#seat2{top:8px;left:50%;transform:translateX(-50%);flex-direction:row}
+#seat1,#seat3{top:50%;transform:translateY(-50%);flex-direction:column}
+#seat1{right:8px} #seat3{left:8px}
+#seat1 .backs,#seat3 .backs{flex-direction:column}
+#seat1 .back,#seat3 .back{width:calc(var(--tw)*.64);height:calc(var(--tw)*.32)}
+.bub{position:absolute;z-index:6;background:var(--cream);color:#1a1410;border-radius:14px;padding:4px 12px;font-weight:700;font-size:14px;
+  box-shadow:0 3px 10px rgba(0,0,0,.5);pointer-events:none;animation:pop .25s ease-out;white-space:nowrap}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.bub.b0{bottom:8px;left:50%;translate:-50% 0}
+.bub.b1{right:70px;top:50%;translate:0 -50%}
+.bub.b2{top:44px;left:50%;translate:-50% 0}
+.bub.b3{left:70px;top:50%;translate:0 -50%}
+
+#board{position:absolute;top:calc(var(--tw)*.64 + 22px);bottom:10px;left:calc(var(--tw)*.64 + 26px);right:calc(var(--tw)*.64 + 26px);z-index:2}
+#board svg{width:100%;height:100%;display:block}
+#board .new{animation:drop .45s ease-out;transform-box:fill-box;transform-origin:center}
+@keyframes drop{0%{opacity:0;transform:scale(1.5)}70%{opacity:1;transform:scale(.95)}100%{transform:scale(1)}}
+#board .ghost{cursor:pointer;animation:blink 1s ease-in-out infinite alternate}
+@keyframes blink{from{opacity:.45}to{opacity:1}}
+#board .last rect.body{stroke:var(--gold);stroke-width:2.5}
+
+/* ---------- Jugador ---------- */
+#me{flex:none;padding:2px 8px calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:4px}
+#meBar{display:flex;align-items:center;gap:8px;min-height:30px;max-width:100%}
+#meBar .nm{background:#1b1714;border:1px solid #3b3128;border-radius:20px;padding:2px 12px;font-weight:700}
+#meBar.turn .nm{border-color:var(--gold);animation:glow 1.2s ease-in-out infinite alternate}
+#status{font-size:14px;color:var(--cream);opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hintBtn{background:#1b1714;border:1px solid #3b3128;border-radius:50%;width:30px;height:30px;font-size:15px;display:none}
+#hintBtn.on{display:grid;place-items:center}
+#hand{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:calc(var(--tw)*2 + 16px);padding-top:12px}
+.tile{width:var(--tw);height:calc(var(--tw)*2);transition:transform .15s,filter .15s;cursor:pointer;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}
+.tile svg{width:100%;height:100%;display:block}
+.tile.ok{transform:translateY(-12px)}
+.tile.ok:hover{transform:translateY(-16px)}
+.tile.sel{transform:translateY(-18px);filter:drop-shadow(0 0 7px var(--gold)) drop-shadow(0 3px 3px rgba(0,0,0,.6))}
+.tile.hint{filter:drop-shadow(0 0 9px #7cf) drop-shadow(0 3px 3px rgba(0,0,0,.6))}
+.tile.shake{animation:shake .35s}
+@keyframes shake{25%{translate:-5px}50%{translate:5px}75%{translate:-3px}}
+
+/* ---------- Finestres ---------- */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20;padding:12px}
+#modal.on{display:flex}
+.box{background:var(--ui);border:1px solid #4a3d31;border-top:3px solid var(--gold);border-radius:14px;max-width:560px;width:100%;max-height:92dvh;overflow:auto;padding:16px 18px;box-shadow:0 10px 40px rgba(0,0,0,.7)}
+.box h2{margin:0 0 10px;color:var(--gold);font-size:20px}
+.box h3{margin:14px 0 6px;color:var(--gold);font-size:16px}
+.box p,.box li{color:var(--txt)}
+.box .row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.btn{background:var(--ui3);border:1px solid #5b4d40;border-radius:10px;padding:8px 16px;font-weight:600}
+.btn.pri{background:var(--gold);border-color:var(--gold);color:#1a1006}
+.btn:hover{filter:brightness(1.1)}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{background:var(--ui2);border:1px solid #4a3d31;border-radius:8px;padding:5px 10px;font-size:13px}
+.seg button.on{background:var(--gold);color:#1a1006;border-color:var(--gold);font-weight:700}
+.opt{display:grid;grid-template-columns:minmax(110px,38%) 1fr;gap:8px 10px;align-items:center;margin:8px 0}
+.opt label{color:var(--mut);font-size:14px}
+.tabs{display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #4a3d31}
+.tabs button{background:none;border:none;padding:6px 10px;color:var(--mut);border-bottom:3px solid transparent}
+.tabs button.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--gold)}
+table.h{width:100%;border-collapse:collapse;font-size:14px}
+table.h td,table.h th{padding:4px 6px;border-bottom:1px solid #3e342b;text-align:center}
+table.h th{color:var(--mut);font-weight:600}
+.res{display:grid;gap:6px;margin:8px 0}
+.res .pl{display:flex;align-items:center;gap:8px;background:var(--ui2);border-radius:8px;padding:5px 8px}
+.res .pl b{min-width:70px}
+.res .pl .mt{display:flex;gap:3px;flex-wrap:wrap;flex:1}
+.res .pl .mt svg{width:18px;height:36px}
+.res .pl .sum{font-weight:700;color:var(--gold);min-width:34px;text-align:right}
+.codebig{font-size:42px;font-weight:900;letter-spacing:10px;text-align:center;color:var(--gold);margin:2px 0 6px}
+input:not([type]),input[type=text]{background:var(--ui2);border:1px solid #5b4d40;border-radius:8px;color:var(--txt);padding:8px 10px;font:inherit;width:100%}
+input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.err{color:#ff9c7a;min-height:1.2em;margin:6px 0 0;font-size:14px}
+#timer{display:none;background:#1b1714;border:1px solid var(--gold);border-radius:12px;padding:1px 8px;font-size:13px;font-variant-numeric:tabular-nums;color:var(--gold)}
+#timer.low{background:#a33232;color:#fff;border-color:#ff7b5a}
+button:disabled{opacity:.5;cursor:default}
+.big{font-size:22px;font-weight:800;color:var(--cream);text-align:center;margin:4px 0}
+.mutd{color:var(--mut);font-size:13px}
+
+/* ---------- Pantalla d'inici ---------- */
+#start{position:fixed;inset:0;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;
+  background:radial-gradient(ellipse at 50% 35%,#2a1a0a 0%,#0b0a09 65%);overflow:auto}
+#start.off{display:none}
+#start img.logo{width:min(70vw,44vh,340px);border-radius:16px}
+#start .menu{display:flex;flex-direction:column;gap:8px;width:min(320px,90vw)}
+#start .menu .btn{padding:12px;font-size:16px}
+#start .langs{margin-top:6px}
+#start .cr{font-size:11px;color:var(--mut);text-align:center;max-width:420px}
+
+@media (max-width:560px){
+  header{gap:5px;padding-left:6px;padding-right:6px}
+  header .ttl{display:none}
+  #score{margin-left:auto;gap:4px}
+  #score .sc{min-width:50px;padding:1px 6px}
+  #score .sc b{font-size:16px}
+  #score .sc span{font-size:9px}
+  #score .tg{font-size:10px}
+  .tools button{width:32px;height:32px;font-size:15px}
+  #status{font-size:13px}
+}
+@media (max-height:520px) and (orientation:landscape){
+  :root{--tw:clamp(24px,min(6vw,9vh),48px)}
+  #hand{padding-top:8px;gap:4px}
+}
+</style>
+</head>
+<body data-tapet="verd">
+
+<header>
+  <img src="img/icona.png" alt="">
+  <div class="ttl">Dòmino<small>XORIGUER</small></div>
+  <div id="score">
+    <div class="sc us"><b id="scUs">0</b><span data-t="Nosaltres">Nosaltres</span></div>
+    <div class="sc"><b id="scThem">0</b><span data-t="Ells">Ells</span></div>
+    <div class="tg" id="scTarget"></div>
+  </div>
+  <div class="tools">
+    <button id="bHist" data-tt="Punts" title="Punts">📜</button>
+    <button id="bRules" data-tt="Regles" title="Regles">❓</button>
+    <button id="bOpt" data-tt="Opcions" title="Opcions">⚙</button>
+    <button id="bMenu" data-tt="Menú" title="Menú">☰</button>
+  </div>
+</header>
+
+<div id="table">
+  <div id="deco"><img src="img/deco.png" alt=""></div>
+  <div class="seat" id="seat2"><span class="nm"></span><div class="backs"></div></div>
+  <div class="seat" id="seat1"><span class="nm"></span><div class="backs"></div></div>
+  <div class="seat" id="seat3"><span class="nm"></span><div class="backs"></div></div>
+  <div id="board"></div>
+</div>
+
+<div id="me">
+  <div id="meBar"><span class="nm" id="meName">Tu</span><button id="hintBtn" title="Pista">💡</button><span id="timer"></span><span id="status"></span></div>
+  <div id="hand"></div>
+</div>
+
+<div id="start"></div>
+<div id="modal"><div class="box" id="mbox"></div></div>
+
+<script src="firebase-config.js"></script>
+<script>
+'use strict';
+/* =====================================================================
+   DÒMINO XORIGUER — dòmino per parelles (doble 6, 28 fitxes, 4 jugadors)
+   Seients 0..3 en sentit antihorari: 0 = tu (a baix), 1 dreta, 2 company (a dalt), 3 esquerra.
+   Parella = p % 2.  Fitxa: {a,b,id} amb a<=b, id = a*10+b.
+   ===================================================================== */
+
+/* ---------- Regles i motor (sense DOM: el poden fer servir els simuladors) ---------- */
+const ALL = [];
+for (let a = 0; a <= 6; a++) for (let b = a; b <= 6; b++) ALL.push({ a, b, id: a * 10 + b });
+const tileById = id => ALL.find(t => t.id === id);
+const pips = t => t.a + t.b;
+const sumHand = h => h.reduce((s, t) => s + pips(t), 0);
+const team = p => p % 2;
+const has = (t, v) => t.a === v || t.b === v;
+const bit = v => 1 << v;
+
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+// Estat d'una mà: S = {hands[4], start, L[], R[], turn, passes, last, voids[4] (màscara de números que no té), must (id obligat a sortir), n (jugades), log[]}
+function newHandState(starter, mustDouble6) {
+  const deck = shuffle(ALL.map(t => ({ ...t })));
+  const hands = [0, 1, 2, 3].map(i => deck.slice(i * 7, i * 7 + 7).sort((x, y) => x.a - y.a || x.b - y.b));
+  let turn = starter, must = null;
+  if (mustDouble6) { turn = hands.findIndex(h => h.some(t => t.id === 66)); must = 66; }
+  return { hands, start: null, L: [], R: [], turn, first: turn, passes: 0, last: -1, voids: [0, 0, 0, 0], must, n: 0, log: [] };
+}
+function ends(S) {
+  if (!S.start) return null;
+  return [S.L.length ? S.L[S.L.length - 1].o : S.start.a, S.R.length ? S.R[S.R.length - 1].o : S.start.b];
+}
+function sidesFor(S, t) {
+  if (!S.start) return (S.must == null || S.must === t.id) ? ['C'] : [];
+  const [l, r] = ends(S), o = [];
+  if (has(t, l)) o.push('L');
+  if (has(t, r)) o.push('R');
+  return o;
+}
+// moviments legals; dedupe = si els dos extrems són iguals, una sola opció per fitxa
+function legalMoves(S, p, dedupe = true) {
+  const out = [], e = ends(S);
+  for (const t of S.hands[p]) {
+    let sd = sidesFor(S, t);
+    if (dedupe && sd.length === 2 && e[0] === e[1]) sd = [S.L.length <= S.R.length ? 'L' : 'R'];
+    for (const side of sd) out.push({ id: t.id, side });
+  }
+  return out;
+}
+function applyMove(S, p, m) {
+  const h = S.hands[p], k = h.findIndex(t => t.id === m.id), t = h[k];
+  h.splice(k, 1);
+  if (m.side === 'C') S.start = { a: t.a, b: t.b, d: t.a === t.b, id: t.id };
+  else {
+    const e = ends(S), v = m.side === 'L' ? e[0] : e[1];
+    const ent = { i: v, o: t.a === v ? t.b : t.a, d: t.a === t.b, id: t.id };
+    (m.side === 'L' ? S.L : S.R).push(ent);
+  }
+  S.passes = 0; S.last = p; S.n++; S.turn = (p + 1) % 4;
+  S.log.push({ p, id: t.id, side: m.side });
+}
+function applyPass(S, p) {
+  const [l, r] = ends(S);
+  S.voids[p] |= bit(l) | bit(r);
+  S.passes++; S.turn = (p + 1) % 4;
+  S.log.push({ p, pass: true });
+}
+// Ha acabat la mà?  {kind:'domino'|'tancat', w: parella guanyadora (-1 empat), who: jugador, pts}
+function handOver(S, rules) {
+  if (S.last >= 0 && S.hands[S.last].length === 0) return finish(S, rules, 'domino', team(S.last), S.last);
+  if (!S.start) return null;
+  for (let p = 0; p < 4; p++) if (legalMoves(S, p).length) return null;
+  const s0 = sumHand(S.hands[0]) + sumHand(S.hands[2]), s1 = sumHand(S.hands[1]) + sumHand(S.hands[3]);
+  const w = s0 === s1 ? -1 : (s0 < s1 ? 0 : 1);
+  let who = -1;
+  if (w >= 0) { const a = w, b = w + 2; who = sumHand(S.hands[a]) <= sumHand(S.hands[b]) ? a : b; }
+  return finish(S, rules, 'tancat', w, who);
+}
+function finish(S, rules, kind, w, who) {
+  const sums = S.hands.map(sumHand);
+  let pts = 0;
+  if (w >= 0) {
+    pts = rules.punts === 'contraris' ? sums[1 - w] + sums[3 - w] : sums[0] + sums[1] + sums[2] + sums[3];
+    if (kind === 'domino' && rules.capicua && isCapicua(S)) pts += 10;
+  }
+  return { kind, w, who, pts, sums, capicua: kind === 'domino' && rules.capicua && isCapicua(S) };
+}
+// capicua: l'última fitxa podia anar als dos extrems (i eren diferents)
+function isCapicua(S) {
+  const L = S.log[S.log.length - 1]; if (!L || L.pass) return false;
+  const t = tileById(L.id);
+  const pre = { ...S, L: S.L.slice(), R: S.R.slice() };
+  (L.side === 'L' ? pre.L : pre.R).pop();
+  const e = ends(pre); if (!e || e[0] === e[1]) return false;
+  return has(t, e[0]) && has(t, e[1]);
+}
+function cloneS(S) {
+  return { hands: S.hands.map(h => h.slice()), start: S.start, L: S.L.slice(), R: S.R.slice(), turn: S.turn, first: S.first,
+    passes: S.passes, last: S.last, voids: S.voids.slice(), must: S.must, n: S.n, log: S.log.slice() };
+}
+
+/* ---------- IA ---------- */
+// Fitxes que p no veu (no són a la taula ni a la seva mà)
+function unseenBy(S, p) {
+  const seen = new Set(S.hands[p].map(t => t.id));
+  if (S.start) seen.add(S.start.id);
+  S.L.forEach(e => seen.add(e.id)); S.R.forEach(e => seen.add(e.id));
+  return ALL.filter(t => !seen.has(t.id));
+}
+// Valoració heurística d'una jugada (nivell Normal). Només fa servir el que p pot saber.
+function evalMove(S, p, m, W = AIW) {
+  const t = tileById(m.id);
+  if (m.side === 'C') {
+    const rest = S.hands[p].filter(x => x.id !== t.id);
+    return pips(t) + (t.a === t.b ? W.dbl : 0) + W.ctl * rest.filter(x => has(x, t.a) || has(x, t.b)).length;
+  }
+  const e = ends(S), v = m.side === 'L' ? e[0] : e[1];
+  const o = t.a === v ? t.b : t.a;
+  const ne = m.side === 'L' ? [o, e[1]] : [e[0], o];
+  const rest = S.hands[p].filter(x => x.id !== t.id);
+  let s = pips(t) * W.pip;
+  if (t.a === t.b) s += W.dbl;
+  // control: puc continuar pels nous extrems
+  const cnt = v2 => rest.filter(x => has(x, v2)).length;
+  s += W.ctl * (cnt(ne[0]) + (ne[1] !== ne[0] ? cnt(ne[1]) : 0));
+  const nxt = (p + 1) % 4, prt = (p + 2) % 4;
+  const vn = S.voids[nxt], vp = S.voids[prt];
+  const bothV = (mask) => (mask & bit(ne[0])) && (mask & bit(ne[1]));
+  const oneV = (mask) => (mask & bit(ne[0])) || (mask & bit(ne[1]));
+  if (bothV(vn)) s += W.block; else if (oneV(vn)) s += W.block * .3;
+  if (bothV(vp)) s -= W.hurt; else if (oneV(vp)) s -= W.hurt * .3;
+  // números que el company ha anat posant (probablement en té)
+  const partnerVals = S.log.filter(x => x.p === prt && !x.pass).map(x => tileById(x.id));
+  if (partnerVals.some(x => has(x, o))) s += W.mate;
+  // si és la meva última fitxa, domino!
+  if (!rest.length) s += 1000;
+  // números esgotats: si després d'això ningú més en pot tenir i jo no en tinc, tanco l'extrem
+  const uns = unseenBy(S, p).filter(x => x.id !== t.id);
+  if (!uns.some(x => has(x, o)) && !cnt(o)) s -= W.dead;
+  return s;
+}
+const AIW = { pip: 1, dbl: 6, ctl: 2.5, block: 10, hurt: 8, mate: 2, dead: 4 };
+
+function aiNormal(S, p, noise = 0) {
+  const ms = legalMoves(S, p);
+  if (ms.length <= 1) return ms[0];
+  let best = null, bv = -1e9;
+  for (const m of ms) { const v = evalMove(S, p, m) + (noise ? Math.random() * noise : 0); if (v > bv) { bv = v; best = m; } }
+  return best;
+}
+function aiEasy(S, p) {
+  const ms = legalMoves(S, p);
+  return Math.random() < .5 ? ms[Math.floor(Math.random() * ms.length)] : aiNormal(S, p, 6);
+}
+// Reparteix les fitxes que p no veu entre els altres 3, respectant quantes en tenen i els números que se sap que no tenen.
+function sampleDeal(S, p) {
+  const uns = unseenBy(S, p), others = [1, 2, 3].map(k => (p + k) % 4);
+  const need = {}; others.forEach(q => need[q] = S.hands[q].length);
+  for (let tries = 0; tries < 40; tries++) {
+    const cap = { ...need }, out = {}; others.forEach(q => out[q] = []);
+    const tl = shuffle(uns.slice());
+    const ok = q => t => !(S.voids[q] & (bit(t.a) | bit(t.b)));
+    tl.sort((x, y) => others.filter(q => ok(q)(x)).length - others.filter(q => ok(q)(y)).length);
+    let fail = false;
+    for (const t of tl) {
+      const c = others.filter(q => cap[q] > 0 && ok(q)(t));
+      if (!c.length) { fail = true; break; }
+      const q = c[Math.floor(Math.random() * c.length)]; out[q].push(t); cap[q]--;
+    }
+    if (!fail) return out;
+  }
+  const tl = shuffle(uns.slice()), out = {}; let k = 0;
+  others.forEach(q => { out[q] = tl.slice(k, k + need[q]); k += need[q]; });
+  return out;
+}
+function playout(S, rules) {
+  for (let guard = 0; guard < 200; guard++) {
+    const o = handOver(S, rules); if (o) return o;
+    const p = S.turn, m = aiNormal(S, p, 1.5);
+    if (!m) applyPass(S, p); else applyMove(S, p, m);
+  }
+  return { w: -1, pts: 0 };
+}
+// Difícil: Monte Carlo sobre repartiments compatibles amb el que se sap
+function aiHard(S, p, rules, N = 70) {
+  const ms = legalMoves(S, p);
+  if (ms.length <= 1) return ms[0];
+  if (ms.some(m => S.hands[p].length === 1)) return ms[0];
+  const deals = []; for (let i = 0; i < N; i++) deals.push(sampleDeal(S, p));
+  let best = null, bv = -1e9;
+  for (const m of ms) {
+    let tot = 0;
+    for (const d of deals) {
+      const C = cloneS(S);
+      for (const q in d) C.hands[q] = d[q].slice();
+      applyMove(C, p, m);
+      const r = playout(C, rules);
+      tot += r.w < 0 ? 0 : (r.w === team(p) ? r.pts : -r.pts);
+    }
+    const v = tot / N + evalMove(S, p, m) * .05;
+    if (v > bv) { bv = v; best = m; }
+  }
+  return best;
+}
+function aiMove(S, p, rules, level) {
+  if (level === 'facil') return aiEasy(S, p);
+  if (level === 'dificil') return aiHard(S, p, rules);
+  return aiNormal(S, p);
+}
+
+/* ---------- Idiomes ---------- */
+const I18N = {
+  es: {
+    'Nosaltres':'Nosotros','Ells':'Ellos','Punts':'Puntos','Regles':'Reglas','Opcions':'Opciones','Menú':'Menú','Tu':'Tú',
+    'Continuar la partida':'Continuar la partida','Partida nova':'Partida nueva','Estadístiques':'Estadísticas','Començar':'Empezar','Tornar':'Volver',
+    'Objectiu':'Objetivo','Nivell de la IA':'Nivel de la IA','Fàcil':'Fácil','Normal':'Normal','Difícil':'Difícil',
+    'Et toca':'Te toca','Juga {0}':'Juega {0}','Passo':'Paso','No en tens cap: passes':'No tienes ninguna: pasas',
+    'Tria on la poses':'Elige dónde la pones','Aquesta fitxa no hi lliga':'Esta ficha no encaja','Has de sortir amb el doble 6':'Tienes que salir con el doble 6',
+    'Surt {0}':'Sale {0}','Dòmino!':'¡Dominó!','Tancat!':'¡Cierre!','Capicua!':'¡Capicúa!',
+    'Dòmino de {0}':'Dominó de {0}','Joc tancat':'Juego cerrado','Empat: ningú no apunta':'Empate: nadie apunta',
+    '+{0} per a nosaltres':'+{0} para nosotros','+{0} per a ells':'+{0} para ellos','Continuar':'Continuar','Continuar ({0})':'Continuar ({0})',
+    'Hem guanyat la partida!':'¡Hemos ganado la partida!','Han guanyat ells':'Han ganado ellos','Tornar al menú':'Volver al menú',
+    'Mà':'Mano','Resultat':'Resultado','Marcador':'Marcador','Encara no hi ha cap mà acabada.':'Aún no hay ninguna mano terminada.',
+    'Aspecte':'Aspecto','So':'Sonido','Joc':'Juego','Idioma':'Idioma','Automàtic':'Automático','Tapet':'Tapete','Verd':'Verde','Blau':'Azul','Vermell':'Rojo','Fusta':'Madera',
+    'Velocitat':'Velocidad','Lenta':'Lenta','Ràpida':'Rápida','Sons':'Sonidos','Sí':'Sí','No':'No','Volum':'Volumen',
+    'Què es compta':'Qué se cuenta','Tots els punts':'Todos los puntos','Només els dels contraris':'Solo los de los contrarios',
+    'Qui surt':'Quién sale','Qui guanya la mà':'Quien gana la mano','Per torn':'Por turno','Doble 6 sempre':'Doble 6 siempre',
+    'Capicua +10':'Capicúa +10','Tancar':'Cerrar','Quant a':'Acerca de','Vols deixar aquesta partida?':'¿Quieres dejar esta partida?',
+    'Partides':'Partidas','Guanyades':'Ganadas','Mans':'Manos','Mans guanyades':'Manos ganadas','Dòminos teus':'Dominós tuyos','Tancats':'Cierres','Punts fets':'Puntos hechos','Esborrar':'Borrar',
+    'Esborrar les estadístiques?':'¿Borrar las estadísticas?','Sí, esborra':'Sí, borra','Pista':'Pista',
+    'Descarregues {0} punts':'Descargas {0} puntos','Et treus un doble de sobre':'Te quitas un doble de encima',
+    '{0} no en té: haurà de passar':'{0} no tiene: tendrá que pasar','Et quedes amb fitxes per continuar':'Te quedas con fichas para seguir',
+    'Tanques la mà':'Cierras la mano','És la millor segons la simulació':'Es la mejor según la simulación','Fes dòmino!':'¡Haz dominó!',
+    'Creat per Xoriguer amb IA.':'Creado por Xoriguer con IA.','Versió':'Versión','queden':'quedan','Nivell':'Nivel',
+    'Sortir':'Salir','La partida queda guardada.':'La partida queda guardada.',
+    "Partida online":"Partida online",
+    "Crear sala":"Crear sala",
+    "Entrar":"Entrar",
+    "Entrar a una sala":"Entrar en una sala",
+    "El teu nom":"Tu nombre",
+    "Codi de la sala":"Código de la sala",
+    "Sala online":"Sala online",
+    "Codi de la sala (passa'l als amics):":"Código de la sala (pásalo a tus amigos):",
+    "Parella 1":"Pareja 1",
+    "Parella 2":"Pareja 2",
+    "Seure aquí":"Sentarse aquí",
+    "IA (lliure)":"IA (libre)",
+    "(tu)":"(tú)",
+    "desconnectat":"desconectado",
+    "Els seients lliures els jugarà la IA. Si algú es desconnecta, la IA juga per ell fins que torni.":"Los asientos libres los juega la IA. Si alguien se desconecta, la IA juega por él hasta que vuelva.",
+    "Partida a {0}. Esperant que l'amfitrió comenci...":"Partida a {0}. Esperando a que el anfitrión empiece...",
+    "Començar ({0})":"Empezar ({0})",
+    "1 persona":"1 persona",
+    "{0} persones":"{0} personas",
+    "Sala tancada":"Sala cerrada",
+    "L'amfitrió ha tancat la sala.":"El anfitrión ha cerrado la sala.",
+    "D'acord":"De acuerdo",
+    "No existeix cap sala amb aquest codi.":"No existe ninguna sala con este código.",
+    "La sala és plena (ja hi ha 4 persones).":"La sala está llena (ya hay 4 personas).",
+    "Falta configurar el servidor (adreça de Firebase).":"Falta configurar el servidor (dirección de Firebase).",
+    "No s'ha pogut connectar: {0}":"No se ha podido conectar: {0}",
+    "Tornar a la sala":"Volver a la sala",
+    "Sortir de la sala":"Salir de la sala",
+    "Esperant l'amfitrió...":"Esperando al anfitrión...",
+    "Connectant...":"Conectando...",
+    "Escriu el teu nom.":"Escribe tu nombre.",
+    "Escriu el codi de 4 lletres.":"Escribe el código de 4 letras.",
+    "Qui crea la sala porta la partida: ha de tenir l'app oberta fins al final.":"Quien crea la sala lleva la partida: debe tener la app abierta hasta el final.",
+    "Sala":"Sala",
+    "Si surts, la sala es tanca per a tothom.":"Si sales, la sala se cierra para todos.",
+    "Els canvis de regles valen per a la partida següent.":"Los cambios de reglas valen para la próxima partida.",
+    "Online, les regles i el nivell els tria l'amfitrió.":"Online, las reglas y el nivel los elige el anfitrión."
+  },
+  fr: {
+    'Nosaltres':'Nous','Ells':'Eux','Punts':'Points','Regles':'Règles','Opcions':'Options','Menú':'Menu','Tu':'Toi',
+    'Continuar la partida':'Reprendre la partie','Partida nova':'Nouvelle partie','Estadístiques':'Statistiques','Començar':'Commencer','Tornar':'Retour',
+    'Objectiu':'Objectif','Nivell de la IA':"Niveau de l'IA",'Fàcil':'Facile','Normal':'Normal','Difícil':'Difficile',
+    'Et toca':"C'est à toi",'Juga {0}':'{0} joue','Passo':'Je passe','No en tens cap: passes':"Tu n'en as aucun : tu passes",
+    'Tria on la poses':'Choisis où la poser','Aquesta fitxa no hi lliga':'Ce domino ne va pas','Has de sortir amb el doble 6':'Tu dois commencer par le double 6',
+    'Surt {0}':'{0} commence','Dòmino!':'Domino !','Tancat!':'Bloqué !','Capicua!':'Capicúa !',
+    'Dòmino de {0}':'Domino de {0}','Joc tancat':'Jeu bloqué','Empat: ningú no apunta':'Égalité : personne ne marque',
+    '+{0} per a nosaltres':'+{0} pour nous','+{0} per a ells':'+{0} pour eux','Continuar':'Continuer','Continuar ({0})':'Continuer ({0})',
+    'Hem guanyat la partida!':'Nous avons gagné la partie !','Han guanyat ells':'Ils ont gagné','Tornar al menú':'Retour au menu',
+    'Mà':'Manche','Resultat':'Résultat','Marcador':'Score','Encara no hi ha cap mà acabada.':"Aucune manche terminée pour l'instant.",
+    'Aspecte':'Apparence','So':'Son','Joc':'Jeu','Idioma':'Langue','Automàtic':'Automatique','Tapet':'Tapis','Verd':'Vert','Blau':'Bleu','Vermell':'Rouge','Fusta':'Bois',
+    'Velocitat':'Vitesse','Lenta':'Lente','Ràpida':'Rapide','Sons':'Sons','Sí':'Oui','No':'Non','Volum':'Volume',
+    'Què es compta':'Ce qui compte','Tots els punts':'Tous les points','Només els dels contraris':'Seulement ceux des adversaires',
+    'Qui surt':'Qui commence','Qui guanya la mà':'Le gagnant de la manche','Per torn':'À tour de rôle','Doble 6 sempre':'Toujours le double 6',
+    'Capicua +10':'Capicúa +10','Tancar':'Fermer','Quant a':'À propos','Vols deixar aquesta partida?':'Quitter cette partie ?',
+    'Partides':'Parties','Guanyades':'Gagnées','Mans':'Manches','Mans guanyades':'Manches gagnées','Dòminos teus':'Tes dominos','Tancats':'Blocages','Punts fets':'Points marqués','Esborrar':'Effacer',
+    'Esborrar les estadístiques?':'Effacer les statistiques ?','Sí, esborra':'Oui, effacer','Pista':'Indice',
+    'Descarregues {0} punts':'Tu te débarrasses de {0} points','Et treus un doble de sobre':'Tu te libères d’un double',
+    '{0} no en té: haurà de passar':"{0} n'en a pas : il devra passer",'Et quedes amb fitxes per continuar':'Tu gardes de quoi continuer',
+    'Tanques la mà':'Tu bloques la manche','És la millor segons la simulació':'La meilleure selon la simulation','Fes dòmino!':'Fais domino !',
+    'Creat per Xoriguer amb IA.':'Créé par Xoriguer avec l’IA.','Versió':'Version','queden':'restent','Nivell':'Niveau',
+    'Sortir':'Quitter','La partida queda guardada.':'La partie est sauvegardée.',
+    "Partida online":"Partie en ligne",
+    "Crear sala":"Créer une salle",
+    "Entrar":"Entrer",
+    "Entrar a una sala":"Rejoindre une salle",
+    "El teu nom":"Ton nom",
+    "Codi de la sala":"Code de la salle",
+    "Sala online":"Salle en ligne",
+    "Codi de la sala (passa'l als amics):":"Code de la salle (envoie-le à tes amis) :",
+    "Parella 1":"Équipe 1",
+    "Parella 2":"Équipe 2",
+    "Seure aquí":"S'asseoir ici",
+    "IA (lliure)":"IA (libre)",
+    "(tu)":"(toi)",
+    "desconnectat":"déconnecté",
+    "Els seients lliures els jugarà la IA. Si algú es desconnecta, la IA juga per ell fins que torni.":"Les places libres sont jouées par l'IA. Si quelqu'un se déconnecte, l'IA joue pour lui jusqu'à son retour.",
+    "Partida a {0}. Esperant que l'amfitrió comenci...":"Partie en {0}. En attente de l'hôte...",
+    "Començar ({0})":"Commencer ({0})",
+    "1 persona":"1 personne",
+    "{0} persones":"{0} personnes",
+    "Sala tancada":"Salle fermée",
+    "L'amfitrió ha tancat la sala.":"L'hôte a fermé la salle.",
+    "D'acord":"D'accord",
+    "No existeix cap sala amb aquest codi.":"Aucune salle avec ce code.",
+    "La sala és plena (ja hi ha 4 persones).":"La salle est pleine (4 personnes).",
+    "Falta configurar el servidor (adreça de Firebase).":"Serveur non configuré (adresse Firebase).",
+    "No s'ha pogut connectar: {0}":"Connexion impossible : {0}",
+    "Tornar a la sala":"Retour à la salle",
+    "Sortir de la sala":"Quitter la salle",
+    "Esperant l'amfitrió...":"En attente de l'hôte...",
+    "Connectant...":"Connexion...",
+    "Escriu el teu nom.":"Écris ton nom.",
+    "Escriu el codi de 4 lletres.":"Écris le code de 4 lettres.",
+    "Qui crea la sala porta la partida: ha de tenir l'app oberta fins al final.":"Celui qui crée la salle mène la partie : il doit garder l'app ouverte jusqu'à la fin.",
+    "Sala":"Salle",
+    "Si surts, la sala es tanca per a tothom.":"Si tu quittes, la salle se ferme pour tout le monde.",
+    "Els canvis de regles valen per a la partida següent.":"Les changements de règles valent pour la prochaine partie.",
+    "Online, les regles i el nivell els tria l'amfitrió.":"En ligne, les règles et le niveau sont choisis par l'hôte."
+  },
+  en: {
+    'Nosaltres':'Us','Ells':'Them','Punts':'Points','Regles':'Rules','Opcions':'Options','Menú':'Menu','Tu':'You',
+    'Continuar la partida':'Continue game','Partida nova':'New game','Estadístiques':'Statistics','Començar':'Start','Tornar':'Back',
+    'Objectiu':'Target','Nivell de la IA':'AI level','Fàcil':'Easy','Normal':'Normal','Difícil':'Hard',
+    'Et toca':'Your turn','Juga {0}':'{0} is playing','Passo':'Pass','No en tens cap: passes':'You have none: you pass',
+    'Tria on la poses':'Choose where to place it','Aquesta fitxa no hi lliga':"This tile doesn't fit",'Has de sortir amb el doble 6':'You must lead the double six',
+    'Surt {0}':'{0} leads','Dòmino!':'Domino!','Tancat!':'Blocked!','Capicua!':'Capicúa!',
+    'Dòmino de {0}':'Domino by {0}','Joc tancat':'Blocked game','Empat: ningú no apunta':'Tie: nobody scores',
+    '+{0} per a nosaltres':'+{0} for us','+{0} per a ells':'+{0} for them','Continuar':'Continue','Continuar ({0})':'Continue ({0})',
+    'Hem guanyat la partida!':'We won the game!','Han guanyat ells':'They won','Tornar al menú':'Back to menu',
+    'Mà':'Hand','Resultat':'Result','Marcador':'Score','Encara no hi ha cap mà acabada.':'No hand finished yet.',
+    'Aspecte':'Look','So':'Sound','Joc':'Game','Idioma':'Language','Automàtic':'Automatic','Tapet':'Table','Verd':'Green','Blau':'Blue','Vermell':'Red','Fusta':'Wood',
+    'Velocitat':'Speed','Lenta':'Slow','Ràpida':'Fast','Sons':'Sounds','Sí':'Yes','No':'No','Volum':'Volume',
+    'Què es compta':'What counts','Tots els punts':'All points','Només els dels contraris':"Only the opponents'",
+    'Qui surt':'Who leads','Qui guanya la mà':'Winner of the hand','Per torn':'In turn','Doble 6 sempre':'Always double six',
+    'Capicua +10':'Capicúa +10','Tancar':'Close','Quant a':'About','Vols deixar aquesta partida?':'Leave this game?',
+    'Partides':'Games','Guanyades':'Won','Mans':'Hands','Mans guanyades':'Hands won','Dòminos teus':'Your dominoes','Tancats':'Blocked','Punts fets':'Points scored','Esborrar':'Clear',
+    'Esborrar les estadístiques?':'Clear the statistics?','Sí, esborra':'Yes, clear','Pista':'Hint',
+    'Descarregues {0} punts':'You unload {0} points','Et treus un doble de sobre':'You get rid of a double',
+    '{0} no en té: haurà de passar':'{0} has none: they will pass','Et quedes amb fitxes per continuar':'You keep tiles to follow',
+    'Tanques la mà':'You block the hand','És la millor segons la simulació':'Best according to the simulation','Fes dòmino!':'Go domino!',
+    'Creat per Xoriguer amb IA.':'Made by Xoriguer with AI.','Versió':'Version','queden':'left','Nivell':'Level',
+    'Sortir':'Exit','La partida queda guardada.':'The game is saved.',
+    "Partida online":"Online game",
+    "Crear sala":"Create room",
+    "Entrar":"Join",
+    "Entrar a una sala":"Join a room",
+    "El teu nom":"Your name",
+    "Codi de la sala":"Room code",
+    "Sala online":"Online room",
+    "Codi de la sala (passa'l als amics):":"Room code (share it with friends):",
+    "Parella 1":"Pair 1",
+    "Parella 2":"Pair 2",
+    "Seure aquí":"Sit here",
+    "IA (lliure)":"AI (free)",
+    "(tu)":"(you)",
+    "desconnectat":"disconnected",
+    "Els seients lliures els jugarà la IA. Si algú es desconnecta, la IA juga per ell fins que torni.":"Free seats are played by the AI. If someone disconnects, the AI plays for them until they return.",
+    "Partida a {0}. Esperant que l'amfitrió comenci...":"Game to {0}. Waiting for the host to start...",
+    "Començar ({0})":"Start ({0})",
+    "1 persona":"1 person",
+    "{0} persones":"{0} people",
+    "Sala tancada":"Room closed",
+    "L'amfitrió ha tancat la sala.":"The host closed the room.",
+    "D'acord":"OK",
+    "No existeix cap sala amb aquest codi.":"There is no room with this code.",
+    "La sala és plena (ja hi ha 4 persones).":"The room is full (4 people).",
+    "Falta configurar el servidor (adreça de Firebase).":"Server not configured (Firebase address).",
+    "No s'ha pogut connectar: {0}":"Could not connect: {0}",
+    "Tornar a la sala":"Back to room",
+    "Sortir de la sala":"Leave room",
+    "Esperant l'amfitrió...":"Waiting for the host...",
+    "Connectant...":"Connecting...",
+    "Escriu el teu nom.":"Type your name.",
+    "Escriu el codi de 4 lletres.":"Type the 4-letter code.",
+    "Qui crea la sala porta la partida: ha de tenir l'app oberta fins al final.":"Whoever creates the room runs the game: they must keep the app open until the end.",
+    "Sala":"Room",
+    "Si surts, la sala es tanca per a tothom.":"If you leave, the room closes for everyone.",
+    "Els canvis de regles valen per a la partida següent.":"Rule changes apply from the next game.",
+    "Online, les regles i el nivell els tria l'amfitrió.":"Online, the host chooses the rules and level."
+  }
+};
+const RULES = {
+  ca: `<h3>El joc</h3><p>Dòmino de doble 6 (28 fitxes) per parelles: tu i <b>Montse</b> (a dalt) contra <b>Jordi</b> i <b>Pere</b>. Cada jugador té 7 fitxes i es juga en sentit contrari a les agulles del rellotge.</p>
+<h3>Com es juga</h3><ul><li>La primera mà surt qui té el <b>doble 6</b>, i ha de sortir amb ell. Les altres mans, depèn de l'opció «Qui surt».</li><li>A cada torn poses una fitxa que lligui amb un dels dos extrems. Si no en tens cap, <b>passes</b>.</li><li>Quan passes, tothom sap que no tens cap fitxa dels números que hi havia als extrems.</li></ul>
+<h3>Fi de la mà</h3><ul><li><b>Dòmino</b>: algú posa la seva última fitxa. La seva parella guanya la mà.</li><li><b>Tancat</b>: ningú no pot posar. Guanya la parella que té menys punts a la mà (empat: ningú no apunta).</li><li>La parella guanyadora apunta els punts de les fitxes que queden (tots, o només els dels contraris, segons l'opció).</li><li><b>Capicua</b> (opcional): si l'última fitxa podia anar a tots dos extrems, +10.</li></ul>
+<h3>Partida</h3><p>Guanya la parella que arriba primer a l'objectiu (100 punts per defecte).</p>`,
+  es: `<h3>El juego</h3><p>Dominó doble 6 (28 fichas) por parejas: tú y <b>Montse</b> (arriba) contra <b>Jordi</b> y <b>Pere</b>. Cada jugador tiene 7 fichas y se juega en sentido contrario a las agujas del reloj.</p>
+<h3>Cómo se juega</h3><ul><li>En la primera mano sale quien tiene el <b>doble 6</b>, y debe salir con él. En las demás, depende de la opción «Quién sale».</li><li>En cada turno pones una ficha que encaje en uno de los dos extremos. Si no tienes ninguna, <b>pasas</b>.</li><li>Cuando pasas, todos saben que no tienes fichas de los números de los extremos.</li></ul>
+<h3>Fin de la mano</h3><ul><li><b>Dominó</b>: alguien pone su última ficha. Su pareja gana la mano.</li><li><b>Cierre</b>: nadie puede poner. Gana la pareja con menos puntos en la mano (empate: nadie apunta).</li><li>La pareja ganadora apunta los puntos de las fichas que quedan (todos, o solo los de los contrarios, según la opción).</li><li><b>Capicúa</b> (opcional): si la última ficha podía ir a los dos extremos, +10.</li></ul>
+<h3>Partida</h3><p>Gana la pareja que llega antes al objetivo (100 puntos por defecto).</p>`,
+  fr: `<h3>Le jeu</h3><p>Dominos double 6 (28 pièces) par équipes : toi et <b>Montse</b> (en haut) contre <b>Jordi</b> et <b>Pere</b>. Chacun a 7 dominos ; on joue dans le sens inverse des aiguilles d'une montre.</p>
+<h3>Déroulement</h3><ul><li>À la première manche, celui qui a le <b>double 6</b> commence avec lui. Ensuite, selon l'option « Qui commence ».</li><li>À ton tour, pose un domino qui correspond à l'une des deux extrémités. Sinon, tu <b>passes</b>.</li><li>Quand tu passes, tout le monde sait que tu n'as aucun des numéros des extrémités.</li></ul>
+<h3>Fin de manche</h3><ul><li><b>Domino</b> : quelqu'un pose son dernier domino ; son équipe gagne.</li><li><b>Blocage</b> : personne ne peut jouer ; l'équipe qui a le moins de points en main gagne (égalité : personne ne marque).</li><li>L'équipe gagnante marque les points restants (tous, ou seulement ceux des adversaires, selon l'option).</li><li><b>Capicúa</b> (option) : si le dernier domino pouvait aller aux deux bouts, +10.</li></ul>
+<h3>Partie</h3><p>La première équipe à atteindre l'objectif gagne (100 points par défaut).</p>`,
+  en: `<h3>The game</h3><p>Double-six dominoes (28 tiles) in pairs: you and <b>Montse</b> (top) against <b>Jordi</b> and <b>Pere</b>. Everyone gets 7 tiles; play goes counter-clockwise.</p>
+<h3>How to play</h3><ul><li>In the first hand, whoever has the <b>double six</b> leads with it. Later hands depend on the “Who leads” option.</li><li>On your turn, place a tile matching one of the two open ends. If you can't, you <b>pass</b>.</li><li>When you pass, everyone knows you hold none of the numbers on the ends.</li></ul>
+<h3>End of a hand</h3><ul><li><b>Domino</b>: someone plays their last tile; their pair wins the hand.</li><li><b>Blocked</b>: nobody can play; the pair with fewer pips in hand wins (tie: nobody scores).</li><li>The winning pair scores the pips left in hands (all of them, or only the opponents', per the option).</li><li><b>Capicúa</b> (optional): if the last tile could go on either end, +10.</li></ul>
+<h3>Game</h3><p>The first pair to reach the target wins (100 points by default).</p>`
+};
+let LANG = 'ca';
+function t(k, ...a) { let s = (LANG !== 'ca' && I18N[LANG] && I18N[LANG][k]) || k; a.forEach((v, i) => s = s.split('{' + i + '}').join(v)); return s; }
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
+  document.querySelectorAll('[data-tt]').forEach(e => e.title = t(e.dataset.tt));
+}
+
+/* ---------- Opcions ---------- */
+const OPTS = [
+  { k: 'idioma', g: 'Aspecte', l: 'Idioma', d: 'auto', v: [['auto', 'Automàtic'], ['ca', 'Català'], ['es', 'Español'], ['fr', 'Français'], ['en', 'English']] },
+  { k: 'tapet', g: 'Aspecte', l: 'Tapet', d: 'verd', v: [['verd', 'Verd'], ['blau', 'Blau'], ['vermell', 'Vermell'], ['fusta', 'Fusta']] },
+  { k: 'so', g: 'So', l: 'Sons', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
+  { k: 'vol', g: 'So', l: 'Volum', d: '70', range: true },
+  { k: 'vel', g: 'Joc', l: 'Velocitat', d: '1', v: [['1.6', 'Lenta'], ['1', 'Normal'], ['0.55', 'Ràpida']] },
+  { k: 'nivell', g: 'Joc', l: 'Nivell de la IA', d: 'normal', v: [['facil', 'Fàcil'], ['normal', 'Normal'], ['dificil', 'Difícil']] },
+  { k: 'punts', g: 'Regles', l: 'Què es compta', d: 'tots', v: [['tots', 'Tots els punts'], ['contraris', 'Només els dels contraris']] },
+  { k: 'surt', g: 'Regles', l: 'Qui surt', d: 'guanya', v: [['guanya', 'Qui guanya la mà'], ['torn', 'Per torn'], ['doble6', 'Doble 6 sempre']] },
+  { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
+];
+const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
+const APP_VERSION = '1.1', APP_DATE = '2026-11-09';
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const opt = k => store.get('dom_opt_' + k, OPTS.find(o => o.k === k).d);
+function setOpt(k, v) {
+  store.set('dom_opt_' + k, v);
+  if (k === 'idioma') setLang();
+  if (k === 'tapet') document.body.dataset.tapet = v;
+}
+function setLang() {
+  const o = opt('idioma');
+  let l = o;
+  if (o === 'auto') { const n = (navigator.language || 'ca').slice(0, 2).toLowerCase(); l = ['ca', 'es', 'fr', 'en'].includes(n) ? n : 'en'; }
+  LANG = l; applyLang();
+  if (G.S) renderAll(); if (!$('#start').classList.contains('off')) startScreen();
+}
+
+/* ---------- So (WebAudio, sense fitxers) ---------- */
+let AC = null;
+function snd(kind) {
+  if (opt('so') !== '1') return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const vol = (+opt('vol') || 0) / 100, now = AC.currentTime;
+    if (kind === 'tile') {
+      // "clac" de fitxa: soroll curt filtrat + to greu
+      const len = .09, buf = AC.createBuffer(1, AC.sampleRate * len, AC.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 6);
+      const src = AC.createBufferSource(); src.buffer = buf;
+      const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2200 + Math.random() * 600; f.Q.value = 1.4;
+      const g = AC.createGain(); g.gain.value = .9 * vol;
+      src.connect(f).connect(g).connect(AC.destination); src.start(now);
+      const o = AC.createOscillator(), g2 = AC.createGain(); o.frequency.value = 180; o.type = 'triangle';
+      g2.gain.setValueAtTime(.25 * vol, now); g2.gain.exponentialRampToValueAtTime(.001, now + .06);
+      o.connect(g2).connect(AC.destination); o.start(now); o.stop(now + .07);
+      return;
+    }
+    const notes = { turn: [660], pass: [300, 240], win: [523, 659, 784, 1046], lose: [392, 330, 262], domino: [784, 988, 1175] }[kind] || [440];
+    notes.forEach((fq, i) => {
+      const o = AC.createOscillator(), g = AC.createGain(), t0 = now + i * .11;
+      o.type = 'sine'; o.frequency.value = fq;
+      g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.18 * vol, t0 + .015); g.gain.exponentialRampToValueAtTime(.001, t0 + .28);
+      o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + .3);
+    });
+  } catch (e) {}
+}
+
+/* ---------- Dibuix de fitxes (SVG) ---------- */
+const PIPS = { 0: [], 1: [[.5, .5]], 2: [[.27, .27], [.73, .73]], 3: [[.27, .27], [.5, .5], [.73, .73]],
+  4: [[.27, .27], [.73, .27], [.27, .73], [.73, .73]], 5: [[.27, .27], [.73, .27], [.5, .5], [.27, .73], [.73, .73]],
+  6: [[.27, .24], [.73, .24], [.27, .5], [.73, .5], [.27, .76], [.73, .76]] };
+const SVG_DEFS = `<defs><linearGradient id="iv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#e2d6bf"/></linearGradient>
+<radialGradient id="pg" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4a443d"/><stop offset=".55" stop-color="#16130f"/></radialGradient></defs>`;
+// Fitxa a (x,y) de mida w×h (unitats de 40). Horitzontal: v1 esquerra, v2 dreta. Vertical: v1 dalt, v2 baix.
+function tileSvg(x, y, w, h, v1, v2, cls = '') {
+  const hor = w > h, U = Math.min(w, h), r = U * .12, pr = U * .085;
+  let s = `<g class="${cls}"><rect class="body" x="${x + .6}" y="${y + .6}" width="${w - 1.2}" height="${h - 1.2}" rx="${r}" fill="url(#iv)" stroke="#a8977a" stroke-width="1"/>`;
+  if (hor) s += `<line x1="${x + w / 2}" y1="${y + U * .14}" x2="${x + w / 2}" y2="${y + h - U * .14}" stroke="#5a4e40" stroke-width="1.3"/>`;
+  else s += `<line x1="${x + U * .14}" y1="${y + h / 2}" x2="${x + w - U * .14}" y2="${y + h / 2}" stroke="#5a4e40" stroke-width="1.3"/>`;
+  s += `<circle cx="${x + w / 2}" cy="${y + h / 2}" r="${U * .06}" fill="#c4964a" stroke="#7a5a22" stroke-width=".6"/>`;
+  [[v1, 0], [v2, 1]].forEach(([v, k]) => {
+    const hx = hor ? x + k * U : x, hy = hor ? y : y + k * U;
+    for (const [px, py] of PIPS[v]) {
+      const qx = hor ? py : px, qy = hor ? px : py;  // girem la disposició a les fitxes horitzontals
+      s += `<circle cx="${(hx + U * qx).toFixed(2)}" cy="${(hy + U * qy).toFixed(2)}" r="${pr.toFixed(2)}" fill="url(#pg)"/>`;
+    }
+  });
+  return s + '</g>';
+}
+function handTileSvg(tl) { return `<svg viewBox="0 0 40 80">${SVG_DEFS}${tileSvg(0, 0, 40, 80, tl.a, tl.b)}</svg>`; }
+
+/* ---------- Disposició de la cadena a la taula (en serp) ---------- */
+// Unitat = mitja fitxa. La fitxa de sortida al centre; la branca dreta va cap a la dreta i gira avall, l'esquerra cap a l'esquerra i gira amunt.
+function layoutChain(S, LIM, ghost) {
+  const out = [];
+  if (!S.start) { if (ghost && ghost.side === 'C') { const g = tileById(ghost.id); out.push(g.a === g.b ? { x: -.5, y: -1, w: 1, h: 2, v1: g.a, v2: g.a, ghost: 'C' } : { x: -1, y: -.5, w: 2, h: 1, v1: g.a, v2: g.b, ghost: 'C' }); } return out; }
+  const st = S.start;
+  out.push(st.d ? { x: -.5, y: -1, w: 1, h: 2, v1: st.a, v2: st.a, id: st.id } : { x: -1, y: -.5, w: 2, h: 1, v1: st.a, v2: st.b, id: st.id });
+  const half = st.d ? .5 : 1;
+  const e = ends(S);
+  for (const [list, dir0, vdir, side] of [[S.R, 1, 1, 'R'], [S.L, -1, -1, 'L']]) {
+    let cur = dir0 * half, y = 0, dir = dir0, prevCross = st.d;
+    const items = list.slice();
+    if (ghost && ghost.side === side) {
+      const g = tileById(ghost.id), v = side === 'L' ? e[0] : e[1];
+      items.push({ i: v, o: g.a === v ? g.b : g.a, d: g.a === g.b, id: g.id, ghost: side });
+    }
+    for (const it of items) {
+      const w = it.d ? 1 : 2; let r;
+      if (Math.abs(cur + dir * w) <= LIM) {
+        const x0 = Math.min(cur, cur + dir * w);
+        r = it.d ? { x: x0, y: y - 1, w: 1, h: 2, v1: it.i, v2: it.i } : { x: x0, y: y - .5, w: 2, h: 1, v1: dir > 0 ? it.i : it.o, v2: dir > 0 ? it.o : it.i };
+        cur += dir * w; prevCross = it.d;
+      } else {
+        const x0 = dir > 0 ? cur - 1 : cur, off = prevCross ? 1 : .5;
+        if (vdir > 0) { const y0 = y + off; r = { x: x0, y: y0, w: 1, h: 2, v1: it.i, v2: it.o }; y = y0 + 1.5; }
+        else { const y0 = y - off - 2; r = { x: x0, y: y0, w: 1, h: 2, v1: it.o, v2: it.i }; y = y0 + .5; }
+        cur = dir > 0 ? cur - 1 : cur + 1; dir = -dir; prevCross = false;
+      }
+      r.id = it.id; if (it.ghost) r.ghost = it.ghost;
+      out.push(r);
+    }
+  }
+  return out;
+}
+
+/* ---------- Estat de la partida ----------
+   ME   = seient d'aquest dispositiu (es dibuixa a baix). En solitari és 0.
+   CTRL = qui decideix a cada seient (només l'amfitrió o el solitari): 'me' aquest dispositiu, 'ai' la IA, 'net' una persona connectada.
+   L'amfitrió porta la partida i publica l'estat sencer a domino/CODI/g; els convidats el pinten i responen a domino/CODI/ans/<seient>. */
+const SOLO_NAMES = ['Tu', 'Jordi', 'Montse', 'Pere'];
+const AI_NAMES = ['Berta', 'Jordi', 'Montse', 'Pere'];
+let NAMES = SOLO_NAMES.slice(), ME = 0, CTRL = ['me', 'ai', 'ai', 'ai'];
+let ONLINE = null, PL = [null, null, null, null];
+const G = { S: null, score: [0, 0], target: 100, history: [], rules: null, level: 'normal', handNo: 0, nextStarter: null,
+  active: false, newId: null, over: false, handDone: false, gameOver: null, evs: [], seq: 0, req: null };
+const view = p => (p - ME + 4) % 4;
+const nm = p => p === ME ? t('Tu') : NAMES[p];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = s => document.querySelector(s);
+const quiet = e => console.warn('Dòmino online:', e && e.message || e);
+const LIMIT = 30;  // segons per jugar online; després juga la IA
+
+let TOKEN = 0, PAUSED = 0, resumeQ = [], WAIT = null, SEL = null, HINT = null, ENDWAIT = null, LOCALREQ = null;
+const WAITNET = {};
+function sleep(ms) {
+  const tk = TOKEN, f = +opt('vel') || 1;
+  return new Promise((res, rej) => {
+    const go = () => { if (tk !== TOKEN) return rej('abort'); if (PAUSED) { resumeQ.push(go); return; } res(); };
+    setTimeout(go, ms * f);
+  });
+}
+function pauseGame() { PAUSED++; }
+function resumeGame() { PAUSED = Math.max(0, PAUSED - 1); if (!PAUSED) { const q = resumeQ; resumeQ = []; q.forEach(f => f()); } }
+function abortGame() {
+  TOKEN++; G.active = false;
+  if (WAIT) { const w = WAIT; WAIT = null; w.rej('abort'); }
+  if (ENDWAIT) { const w = ENDWAIT; ENDWAIT = null; w.rej('abort'); }
+  Object.keys(WAITNET).forEach(k => WAITNET[k]());
+  const q = resumeQ; resumeQ = []; PAUSED = 0; q.forEach(f => f());
+  SEL = null; HINT = null; LOCALREQ = null; stopTimer();
+}
+
+function snap() {
+  return { S: G.S, score: G.score, target: G.target, history: G.history, rules: G.rules, level: G.level, handNo: G.handNo,
+    nextStarter: G.nextStarter, over: G.over, handDone: G.handDone, gameOver: G.gameOver, evs: G.evs, seq: G.seq, req: G.req, names: NAMES };
+}
+// Solitari: localStorage. Online: l'amfitrió publica l'estat (que també serveix per reprendre la partida).
+function saveGame() {
+  if (ONLINE) { if (ONLINE.host) ONLINE.net.set(`domino/${ONLINE.code}/g`, JSON.stringify(snap())).catch(quiet); return; }
+  if (!G.active) return;
+  store.set('dom_save', JSON.stringify(snap()));
+}
+function loadSave() { try { return JSON.parse(store.get('dom_save', 'null')); } catch (e) { return null; } }
+
+/* Esdeveniments: el que passa a la taula (bafarades, sons, estat). L'amfitrió els aplica i els publica; els convidats els repeteixen. */
+function emit(ev) {
+  ev.k = ++G.seq; G.evs.push(ev); while (G.evs.length > 12) G.evs.shift();
+  fx(ev); saveGame();
+}
+function fx(ev) {
+  const S = G.S;
+  switch (ev.n) {
+    case 'start': if (MODALKIND === 'end' || MODALKIND === 'over') closeModal(true); status(t('Surt {0}', nm(ev.p))); break;
+    case 'turn':
+      if (ev.p === ME) { status(S && !S.start && S.must === 66 ? t('Has de sortir amb el doble 6') : t('Et toca')); snd('turn'); }
+      else status(t('Juga {0}', nm(ev.p)));
+      break;
+    case 'nomove': status(ev.p === ME ? t('No en tens cap: passes') : t('Juga {0}', nm(ev.p))); break;
+    case 'pass': bubble(ev.p, t('Passo')); snd('pass'); break;
+    case 'move':
+      G.newId = ev.id; snd('tile');
+      if (ev.dom) { bubble(ev.p, ev.dom === 'cap' ? t('Capicua!') : ev.dom === 'dom' ? t('Dòmino!') : t('Tancat!'), 1800); if (ev.dom !== 'tan') snd('domino'); }
+      break;
+    case 'end': showEnd(ev); break;
+  }
+}
+
+/* ---------- Pintar ---------- */
+function boardLim() {
+  const b = $('#board'), A = b.clientWidth / Math.max(1, b.clientHeight);
+  return Math.max(3, Math.min(11, A * 3.6));
+}
+function renderBoard() {
+  const S = G.S, b = $('#board');
+  if (!S) { b.innerHTML = ''; return; }
+  const LIM = boardLim();
+  const gh = SEL ? SEL.opts : [];
+  const base = layoutChain(S, LIM);
+  const ghosts = gh.map(m => layoutChain(S, LIM, m).find(r => r.ghost));
+  const all = base.concat(ghosts.filter(Boolean));
+  const lastId = S.log.length && !S.log[S.log.length - 1].pass ? S.log[S.log.length - 1].id : null;
+  let minx = -LIM - .5, maxx = LIM + .5, miny = -1.5, maxy = 1.5;
+  for (const r of all) { minx = Math.min(minx, r.x); maxx = Math.max(maxx, r.x + r.w); miny = Math.min(miny, r.y); maxy = Math.max(maxy, r.y + r.h); }
+  const A = b.clientWidth / Math.max(1, b.clientHeight);
+  let W = maxx - minx + .6, H = maxy - miny + .6;
+  if (W / H < A) W = H * A; else H = W / A;
+  const cx = (minx + maxx) / 2, cy = (miny + maxy) / 2, U = 40;
+  let s = `<svg viewBox="${(cx - W / 2) * U} ${(cy - H / 2) * U} ${W * U} ${H * U}" preserveAspectRatio="xMidYMid meet">${SVG_DEFS}
+  <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1.5" dy="2.5" stdDeviation="1.8" flood-opacity=".5"/></filter><g filter="url(#sh)">`;
+  for (const r of base) {
+    const cls = (r.id === G.newId ? 'new ' : '') + (r.id === lastId ? 'last' : '');
+    s += tileSvg(r.x * U, r.y * U, r.w * U, r.h * U, r.v1, r.v2, cls);
+  }
+  s += '</g>';
+  ghosts.forEach(r => {
+    if (!r) return;
+    s += `<g class="ghost" data-side="${r.ghost}"><rect x="${r.x * U - 3}" y="${r.y * U - 3}" width="${r.w * U + 6}" height="${r.h * U + 6}" rx="8" fill="rgba(247,147,30,.35)" stroke="#f7931e" stroke-width="3" stroke-dasharray="7 4"/>
+      <g opacity=".75">${tileSvg(r.x * U, r.y * U, r.w * U, r.h * U, r.v1, r.v2)}</g></g>`;
+  });
+  b.innerHTML = s + '</svg>';
+  G.newId = null;
+}
+function renderSeats() {
+  const S = G.S;
+  for (let p = 0; p < 4; p++) {
+    if (p === ME) continue;
+    const el = $('#seat' + view(p));
+    const n = S ? S.hands[p].length : 0;
+    const tag = ONLINE ? (!PL[p] ? ' 🤖' : (!PL[p].on ? ' ⚠' : '')) : '';
+    el.querySelector('.nm').innerHTML = `${esc(nm(p))}${tag}<i>${n ? n : ''}</i>`;
+    el.querySelector('.backs').innerHTML = '<div class="back"></div>'.repeat(n);
+    el.classList.toggle('turn', !!(S && !G.over && S.turn === p && (G.active || ONLINE)));
+  }
+  $('#meName').textContent = ONLINE && PL[ME] ? PL[ME].name : nm(ME);
+  $('#meBar').classList.toggle('turn', !!WAIT);
+}
+function renderHand() {
+  const S = G.S, h = $('#hand');
+  if (!S) { h.innerHTML = ''; $('#hintBtn').classList.remove('on'); return; }
+  const okIds = new Set(WAIT ? WAIT.ms.map(m => m.id) : []);
+  h.innerHTML = S.hands[ME].map(tl => `<div class="tile${okIds.has(tl.id) ? ' ok' : ''}${SEL && SEL.id === tl.id ? ' sel' : ''}${HINT && HINT.id === tl.id ? ' hint' : ''}" data-id="${tl.id}">${handTileSvg(tl)}</div>`).join('');
+  $('#hintBtn').classList.toggle('on', !!WAIT);
+}
+function renderScore() {
+  $('#scUs').textContent = G.score[team(ME)];
+  $('#scThem').textContent = G.score[1 - team(ME)];
+  $('#scTarget').textContent = G.S || G.active ? '/' + G.target : '';
+}
+function renderAll() { renderScore(); renderSeats(); renderHand(); renderBoard(); applyLang(); }
+let statusTxt = '';
+function status(s) { statusTxt = s; $('#status').textContent = s; }
+function bubble(p, txt, ms = 1400) {
+  const b = document.createElement('div'); b.className = 'bub b' + view(p); b.textContent = txt;
+  $('#table').appendChild(b); setTimeout(() => b.remove(), ms * (+opt('vel') || 1));
+}
+let timerT = null;
+function startTimer(sec, onEnd) {
+  stopTimer(); const el = $('#timer'); let n = sec;
+  const show = () => { el.textContent = '⏱ ' + n; el.classList.toggle('low', n <= 5); el.style.display = 'inline-block'; };
+  show();
+  timerT = setInterval(() => { n--; if (n <= 0) { stopTimer(); onEnd(); } else show(); }, 1000);
+}
+function stopTimer() { clearInterval(timerT); timerT = null; const el = $('#timer'); if (el) el.style.display = 'none'; }
+
+/* ---------- Finestres ---------- */
+let modalClose = null, MODALKIND = null, modalLock = false;
+function modal(html, onClose, kind = null, lock = false) {
+  // si tapem la finestra de final de mà (p. ex. obrint les regles), la mà següent continua igualment
+  if (MODALKIND === 'end' && modalClose) { const f = modalClose; modalClose = null; f(); }
+  $('#mbox').innerHTML = html; $('#modal').classList.add('on'); modalClose = onClose || null; MODALKIND = kind; modalLock = lock;
+}
+function closeModal(silent) {
+  $('#modal').classList.remove('on'); $('#mbox').innerHTML = '';
+  const f = modalClose; modalClose = null; MODALKIND = null; modalLock = false; if (f && !silent) f();
+}
+function pausedModal(html) { const p = G.active && !ONLINE; if (p) pauseGame(); modal(html, () => { if (p) resumeGame(); }); }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal' && !modalLock) closeModal(); });
+
+function rulesHtml() { return `<h2>${t('Regles')}</h2>${RULES[LANG] || RULES.ca}<div class="row"><button class="btn pri" onclick="closeModal()">${t('Tancar')}</button></div>`; }
+function histHtml() {
+  let rows = G.history.map((h, i) => `<tr><td>${i + 1}</td><td>${h.kind === 'domino' ? t('Dòmino de {0}', esc(nm(h.who))) : t('Joc tancat')}</td><td>${h.w < 0 ? '—' : (h.w === team(ME) ? '+' + h.pts + ' ' + t('Nosaltres') : '+' + h.pts + ' ' + t('Ells'))}</td><td>${h.score[team(ME)]} – ${h.score[1 - team(ME)]}</td></tr>`).join('');
+  if (!rows) rows = `<tr><td colspan="4" class="mutd">${t('Encara no hi ha cap mà acabada.')}</td></tr>`;
+  return `<h2>${t('Punts')}</h2><table class="h"><tr><th>${t('Mà')}</th><th>${t('Resultat')}</th><th>${t('Punts')}</th><th>${t('Marcador')}</th></tr>${rows}</table>
+  <div class="row"><button class="btn pri" onclick="closeModal()">${t('Tancar')}</button></div>`;
+}
+let optTab = 'Aspecte';
+function optHtml() {
+  const tabs = OPT_TABS.map(g => `<button class="${g === optTab ? 'on' : ''}" onclick="optTab='${g}';$('#mbox').innerHTML=optHtml()">${t(g)}</button>`).join('');
+  let body = '';
+  if (optTab === 'Quant a') body = aboutHtml();
+  else body = OPTS.filter(o => o.g === optTab).map(o => {
+    const cur = opt(o.k);
+    const ctl = o.range ? `<input type="range" min="0" max="100" value="${cur}" oninput="setOpt('${o.k}',this.value)" onchange="snd('tile')">`
+      : `<div class="seg">${o.v.map(([v, l]) => `<button class="${v === cur ? 'on' : ''}" onclick="setOpt('${o.k}','${v}');$('#mbox').innerHTML=optHtml()">${t(l)}</button>`).join('')}</div>`;
+    return `<div class="opt"><label>${t(o.l)}</label>${ctl}</div>`;
+  }).join('') + ((optTab === 'Regles' || optTab === 'Joc') && (G.active || ONLINE) ? `<p class="mutd">${t('Els canvis de regles valen per a la partida següent.')}${ONLINE ? ' ' + t("Online, les regles i el nivell els tria l'amfitrió.") : ''}</p>` : '');
+  return `<h2>${t('Opcions')}</h2><div class="tabs">${tabs}</div>${body}<div class="row"><button class="btn pri" onclick="closeModal()">${t('Tancar')}</button></div>`;
+}
+function aboutHtml() {
+  return `<div style="text-align:center"><img src="img/logo.jpg" style="width:180px;border-radius:12px"><div class="big">Dòmino · Xoriguer</div>
+  <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xoriguer amb IA.')}</p></div>`;
+}
+function stats() { try { return JSON.parse(store.get('dom_stats', '{}')) || {}; } catch (e) { return {}; } }
+function addStat(k, n = 1) { const s = stats(); s[k] = (s[k] || 0) + n; store.set('dom_stats', JSON.stringify(s)); }
+function statsHtml() {
+  const s = stats();
+  const rows = [['Partides', s.games], ['Guanyades', s.gamesWon], ['Mans', s.hands], ['Mans guanyades', s.handsWon], ['Dòminos teus', s.myDom], ['Tancats', s.blocked], ['Punts fets', s.pts]]
+    .map(([k, v]) => `<tr><td style="text-align:left">${t(k)}</td><td><b>${v || 0}</b></td></tr>`).join('');
+  return `<h2>${t('Estadístiques')}</h2><table class="h">${rows}</table>
+  <div class="row"><button class="btn" onclick="if(confirm(t('Esborrar les estadístiques?'))){store.del('dom_stats');$('#mbox').innerHTML=statsHtml()}">${t('Esborrar')}</button><button class="btn pri" onclick="closeModal()">${t('Tancar')}</button></div>`;
+}
+
+$('#bRules').onclick = () => pausedModal(rulesHtml());
+$('#bHist').onclick = () => pausedModal(histHtml());
+$('#bOpt').onclick = () => { optTab = 'Aspecte'; pausedModal(optHtml()); };
+$('#bMenu').onclick = () => {
+  if (ONLINE) {
+    if (ONLINE.state === 'lobby') return;
+    modal(`<h2>${t('Menú')}</h2><p>${t('Sala')} <b>${ONLINE.code}</b>${ONLINE.host ? ' · ' + t("Si surts, la sala es tanca per a tothom.") : ''}</p><div class="row">
+      <button class="btn" onclick="closeModal();leaveRoom().then(startScreen)">${t('Sortir de la sala')}</button>
+      <button class="btn pri" onclick="closeModal()">${t('Continuar')}</button></div>`);
+    return;
+  }
+  if (!G.active) { startScreen(); return; }
+  pausedModal(`<h2>${t('Menú')}</h2><p>${t('La partida queda guardada.')}</p><div class="row">
+    <button class="btn" onclick="closeModal();toMenu()">${t('Tornar al menú')}</button>
+    <button class="btn pri" onclick="closeModal()">${t('Continuar')}</button></div>`);
+};
+function toMenu() { saveGame(); abortGame(); G.S = null; renderAll(); status(''); startScreen(); }
+
+/* ---------- Pantalla d'inici ---------- */
+function startScreen() {
+  const st = $('#start'); st.classList.remove('off');
+  const sv = loadSave();
+  const langs = [['ca', 'Català'], ['es', 'Español'], ['fr', 'Français'], ['en', 'English']]
+    .map(([v, l]) => `<button class="${LANG === v ? 'on' : ''}" onclick="setOpt('idioma','${v}')">${l}</button>`).join('');
+  st.innerHTML = `<img class="logo" src="img/logo.jpg" alt="Dòmino Xoriguer">
+  <div class="menu">
+    ${sv ? `<button class="btn pri" onclick="resumeSaved()">▶ ${t('Continuar la partida')} <small>(${sv.score[0]}–${sv.score[1]})</small></button>` : ''}
+    <button class="btn ${sv ? '' : 'pri'}" onclick="soloScreen()">${t('Partida nova')}</button>
+    <button class="btn" onclick="onlineScreen()">🌐 ${t('Partida online')}</button>
+    <button class="btn" onclick="modal(statsHtml())">${t('Estadístiques')}</button>
+    <button class="btn" onclick="modal(rulesHtml())">${t('Regles')}</button>
+    <button class="btn" onclick="optTab='Aspecte';modal(optHtml())">${t('Opcions')}</button>
+  </div>
+  <div class="seg langs">${langs}</div>
+  <div class="cr">${t('Creat per Xoriguer amb IA.')} · v${APP_VERSION}</div>`;
+}
+let soloTarget = +store.get('dom_target', '100');
+function soloScreen() {
+  const st = $('#start');
+  const tg = [50, 100, 150, 200].map(v => `<button class="${v === soloTarget ? 'on' : ''}" onclick="soloTarget=${v};store.set('dom_target',${v});soloScreen()">${v}</button>`).join('');
+  const lv = OPTS.find(o => o.k === 'nivell').v.map(([v, l]) => `<button class="${opt('nivell') === v ? 'on' : ''}" onclick="setOpt('nivell','${v}');soloScreen()">${t(l)}</button>`).join('');
+  st.innerHTML = `<img class="logo" src="img/logo.jpg" alt="" style="width:min(50vw,30vh,220px)">
+  <div class="box" style="max-width:380px">
+    <p>${t('Tu')} + Montse &nbsp;vs&nbsp; Jordi + Pere</p>
+    <div class="opt"><label>${t('Objectiu')}</label><div class="seg">${tg}</div></div>
+    <div class="opt"><label>${t('Nivell de la IA')}</label><div class="seg">${lv}</div></div>
+    <div class="row"><button class="btn" onclick="startScreen()">${t('Tornar')}</button><button class="btn pri" onclick="startSolo()">${t('Començar')}</button></div>
+  </div>`;
+}
+function resetGame(target) {
+  Object.assign(G, { S: null, score: [0, 0], target, history: [], handNo: 0, nextStarter: null, over: false, handDone: false, gameOver: null,
+    evs: [], seq: 0, req: null, rules: { punts: opt('punts'), surt: opt('surt'), capicua: opt('capicua') === '1' }, level: opt('nivell') });
+}
+function startSolo() {
+  if (loadSave() && !confirm(t('Vols deixar aquesta partida?'))) return;
+  store.del('dom_save');
+  abortGame(); closeModal(true);
+  ME = 0; NAMES = SOLO_NAMES.slice(); CTRL = ['me', 'ai', 'ai', 'ai'];
+  resetGame(soloTarget);
+  $('#start').classList.add('off');
+  G.active = true; gameLoop();
+}
+function resumeSaved() {
+  const sv = loadSave(); if (!sv) return;
+  abortGame();
+  ME = 0; NAMES = SOLO_NAMES.slice(); CTRL = ['me', 'ai', 'ai', 'ai'];
+  Object.assign(G, sv); G.req = null; G.evs = G.evs || []; G.seq = G.seq || 0;
+  if (G.gameOver != null) { store.del('dom_save'); startScreen(); return; }
+  G.active = true;
+  $('#start').classList.add('off');
+  gameLoop();
+}
+
+/* ---------- Bucle del joc (solitari o amfitrió) ---------- */
+async function gameLoop() {
+  try {
+    while (true) {
+      if (!G.S || G.handDone) newHand();
+      renderAll();
+      const res = await playHand();
+      const gameOver = await endHand(res);
+      if (gameOver) return;
+    }
+  } catch (e) { if (e !== 'abort' && e !== 'cancel') console.error(e); }
+}
+function newHand() {
+  const r = G.rules, first = G.handNo === 0;
+  const starter = G.nextStarter == null ? 0 : G.nextStarter;
+  G.S = newHandState(starter, first || r.surt === 'doble6');
+  G.handNo++; G.over = false; G.handDone = false; G.req = null;
+}
+async function playHand() {
+  const S = G.S;
+  if (!S.start && !S.log.length) { emit({ n: 'start', p: S.turn }); renderAll(); await sleep(700); }
+  while (true) {
+    const o = handOver(S, G.rules); if (o) return o;
+    const p = S.turn, ms = legalMoves(S, p, CTRL[p] === 'ai');
+    if (!ms.length) {
+      emit({ n: 'nomove', p }); renderSeats();
+      await sleep(p === ME ? 900 : 600);
+      applyPass(S, p); emit({ n: 'pass', p }); renderAll();
+      await sleep(900);
+      continue;
+    }
+    emit({ n: 'turn', p }); renderSeats();
+    const m = await decide(p, ms);
+    G.req = null;
+    applyMove(S, p, m);
+    const done = handOver(S, G.rules);
+    emit({ n: 'move', p, id: m.id, dom: done ? (done.kind === 'domino' ? (done.capicua ? 'cap' : 'dom') : 'tan') : null });
+    renderAll();
+    await sleep(450);
+  }
+}
+// Qui decideix cada jugada: aquest dispositiu, una persona connectada o la IA
+async function decide(p, ms) {
+  const tk = TOKEN;
+  if (CTRL[p] === 'me') {
+    const m = await timedUser(ms);
+    if (tk !== TOKEN) throw 'abort';
+    if (m) return m;
+    return aiMove(G.S, p, G.rules, G.level);  // s'ha acabat el temps
+  }
+  if (CTRL[p] === 'net' && ONLINE && PL[p] && PL[p].on) {
+    const v = await netDecide(p);
+    if (tk !== TOKEN) throw 'abort';
+    const ok = v && ms.find(m => m.id === v.id && m.side === v.side);
+    if (ok) return ok;
+    return aiMove(G.S, p, G.rules, G.level);  // desconnectat, sense temps o resposta no vàlida
+  }
+  await sleep(650 + Math.random() * 500);
+  return aiMove(G.S, p, G.rules, G.level);
+}
+function netDecide(p) {
+  const o = ONLINE, rid = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  return new Promise(res => {
+    let done = false, off = () => {}, tt = null;
+    const fin = v => { if (done) return; done = true; clearTimeout(tt); off(); delete WAITNET[p]; res(v); };
+    off = o.net.on(`domino/${o.code}/ans/${p}`, a => { if (a && a.rid === rid) { try { fin(JSON.parse(a.v)); } catch (e) { fin(null); } } });
+    WAITNET[p] = () => fin(null);
+    tt = setTimeout(() => fin(null), (LIMIT + 4) * 1000);
+    G.req = { p, rid }; saveGame();
+  });
+}
+async function timedUser(ms) {
+  if (!ONLINE) return userMove(ms);
+  startTimer(LIMIT, () => finishUser(null));
+  try { return await userMove(ms); } finally { stopTimer(); }
+}
+function userMove(ms) {
+  return new Promise((res, rej) => { WAIT = { ms, res, rej }; SEL = null; HINT = null; renderHand(); renderSeats(); });
+}
+function finishUser(m) {
+  if (!WAIT) return;
+  const w = WAIT; WAIT = null; SEL = null; HINT = null;
+  renderHand(); renderSeats(); renderBoard();
+  w.res(m);
+}
+$('#hand').addEventListener('click', e => {
+  const el = e.target.closest('.tile'); if (!el || !WAIT) return;
+  const id = +el.dataset.id;
+  const opts = WAIT.ms.filter(m => m.id === id);
+  if (!opts.length) {
+    el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+    status(G.S.start ? t('Aquesta fitxa no hi lliga') : t('Has de sortir amb el doble 6'));
+    return;
+  }
+  const e2 = ends(G.S);
+  if (opts.length === 1) { finishUser(opts[0]); return; }
+  if (e2 && e2[0] === e2[1]) { finishUser(opts[G.S.L.length <= G.S.R.length ? 0 : 1]); return; }
+  if (SEL && SEL.id === id) { SEL = null; status(t('Et toca')); }
+  else { SEL = { id, opts }; status(t('Tria on la poses')); }
+  renderHand(); renderBoard();
+});
+$('#board').addEventListener('click', e => {
+  const g = e.target.closest('.ghost'); if (!g || !SEL || !WAIT) return;
+  const m = SEL.opts.find(o => o.side === g.dataset.side); if (m) finishUser(m);
+});
+$('#hintBtn').onclick = () => {
+  if (!WAIT) return;
+  const S = G.S, m = aiHard(S, ME, G.rules);
+  if (!m) return;
+  HINT = m; renderHand();
+  const tl = tileById(m.id);
+  let why;
+  if (S.hands[ME].length === 1) why = t('Fes dòmino!');
+  else if (m.side === 'C') why = tl.a === tl.b ? t('Et treus un doble de sobre') : t('És la millor segons la simulació');
+  else {
+    const C = cloneS(S); applyMove(C, ME, m);
+    const ne = ends(C), nx = (ME + 1) % 4, mask = S.voids[nx];
+    if ((mask & bit(ne[0])) && (mask & bit(ne[1]))) why = t('{0} no en té: haurà de passar', nm(nx));
+    else if (tl.a === tl.b) why = t('Et treus un doble de sobre');
+    else if (pips(tl) >= 9) why = t('Descarregues {0} punts', pips(tl));
+    else if (C.hands[ME].some(x => has(x, ne[0]) || has(x, ne[1]))) why = t('Et quedes amb fitxes per continuar');
+    else why = t('És la millor segons la simulació');
+  }
+  status('💡 ' + why);
+  if (m.side !== 'C' && WAIT.ms.filter(x => x.id === m.id).length > 1) { SEL = { id: m.id, opts: [m] }; renderBoard(); renderHand(); }
+};
+
+async function endHand(res) {
+  const S = G.S; G.over = true;
+  renderSeats();
+  status(res.kind === 'domino' ? t('Dòmino de {0}', nm(res.who)) : t('Joc tancat'));
+  await sleep(1300);
+  if (res.w >= 0) G.score[res.w] += res.pts;
+  G.history.push({ kind: res.kind, who: res.who, w: res.w, pts: res.pts, score: G.score.slice() });
+  G.nextStarter = G.rules.surt === 'guanya' && res.who >= 0 ? res.who : (S.first + 1) % 4;
+  G.handDone = true;
+  const winner = Math.max(...G.score) >= G.target && G.score[0] !== G.score[1] ? (G.score[0] > G.score[1] ? 0 : 1) : -1;
+  if (winner >= 0) { G.gameOver = winner; G.active = false; }
+  emit({ n: 'end', res, hands: S.hands, winner });
+  if (winner >= 0) { if (!ONLINE) store.del('dom_save'); return true; }
+  await new Promise((r1, r2) => { ENDWAIT = { res: r1, rej: r2 }; });
+  return false;
+}
+// Finestra de final de mà (la veu tothom). Les estadístiques es compten a cada dispositiu.
+function showEnd(ev) {
+  const res = ev.res, me = team(ME), winner = ev.winner;
+  addStat('hands');
+  if (res.w === me) { addStat('handsWon'); addStat('pts', res.pts); }
+  if (res.kind === 'domino' && res.who === ME) addStat('myDom');
+  if (res.kind === 'tancat') addStat('blocked');
+  if (winner >= 0) { addStat('games'); if (winner === me) addStat('gamesWon'); }
+  renderScore();
+  const title = res.kind === 'domino' ? t('Dòmino de {0}', esc(nm(res.who))) + (res.capicua ? ' · ' + t('Capicua!') : '') : t('Joc tancat');
+  const gain = res.w < 0 ? t('Empat: ningú no apunta') : (res.w === me ? t('+{0} per a nosaltres', res.pts) : t('+{0} per a ells', res.pts));
+  const pls = [ME, (ME + 2) % 4, (ME + 1) % 4, (ME + 3) % 4].map(p => `<div class="pl"><b>${esc(nm(p))}</b><div class="mt">${ev.hands[p].map(x => `<svg viewBox="0 0 40 80">${SVG_DEFS}${tileSvg(0, 0, 40, 80, x.a, x.b)}</svg>`).join('')}</div><span class="sum">${res.sums[p]}</span></div>`).join('');
+  snd(winner >= 0 ? (winner === me ? 'win' : 'lose') : (res.w === me ? 'win' : res.w < 0 ? 'turn' : 'lose'));
+  const drive = !ONLINE || ONLINE.host;  // qui porta la partida
+  let html = `<h2>${title}</h2><div class="big" style="color:${res.w === me ? 'var(--gold)' : 'var(--cream)'}">${gain}</div><div class="res">${pls}</div>
+    <p style="text-align:center"><b>${t('Nosaltres')} ${G.score[me]}</b> – ${G.score[1 - me]} ${t('Ells')} <span class="mutd">/ ${G.target}</span></p>`;
+  if (winner >= 0) {
+    html += `<div class="big">${winner === me ? '🏆 ' + t('Hem guanyat la partida!') : t('Han guanyat ells')}</div>`;
+    if (!ONLINE) html += `<div class="row"><button class="btn" onclick="closeModal();G.S=null;renderAll();status('');startScreen()">${t('Tornar al menú')}</button><button class="btn pri" onclick="closeModal();startSolo()">${t('Partida nova')}</button></div>`;
+    else if (ONLINE.host) html += `<div class="row"><button class="btn" onclick="closeModal();leaveRoom().then(startScreen)">${t('Sortir de la sala')}</button><button class="btn" onclick="closeModal();backToLobby()">${t('Tornar a la sala')}</button><button class="btn pri" onclick="closeModal();hostStart()">${t('Partida nova')}</button></div>`;
+    else html += `<p class="mutd" style="text-align:center">${t("Esperant l'amfitrió...")}</p><div class="row"><button class="btn" onclick="closeModal();leaveRoom().then(startScreen)">${t('Sortir de la sala')}</button></div>`;
+    modal(html, null, 'over', true);
+    return;
+  }
+  html += `<div class="row"><button class="btn pri" id="contBtn">${t('Continuar')}</button></div>`;
+  let n = ONLINE ? 12 : 8, iv = null;
+  const go = () => { clearInterval(iv); if (drive) { if (ENDWAIT) { const w = ENDWAIT; ENDWAIT = null; w.res(); } } };
+  modal(html, go, 'end');
+  const b = $('#contBtn');
+  b.textContent = t('Continuar ({0})', n);
+  b.onclick = () => closeModal();
+  iv = setInterval(() => {
+    if (PAUSED) return;
+    if (MODALKIND !== 'end') { clearInterval(iv); return; }
+    n--;
+    if (n <= 0) { clearInterval(iv); closeModal(); }
+    else if ($('#contBtn')) $('#contBtn').textContent = t('Continuar ({0})', n);
+  }, 1000);
+}
+
+/* ---------- Online (Firebase Realtime Database) ----------
+   domino/CODI = {state:'lobby'|'playing', host:uid, target, created, players:{seient:{uid,name,on}}, g:'estat JSON', ans:{seient:{rid,v}}}
+   - fbNet: Firebase (SDK compat, es carrega només en entrar al mode online)
+   - localNet: pestanyes del mateix navegador (només per provar; s'activa amb ?prova a l'adreça) */
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('No s\'ha pogut carregar ' + src)); document.head.appendChild(s); }); }
+function fbNet(db) {
+  const r = p => db.ref(p);
+  return {
+    get: p => r(p).get().then(s => s.val()),
+    set: (p, v) => r(p).set(v),
+    update: (p, v) => r(p).update(v),
+    remove: p => r(p).remove(),
+    on: (p, cb) => { const f = s => cb(s.val()); r(p).on('value', f); return () => r(p).off('value', f); },
+    tx: (p, fn) => r(p).transaction(fn).then(x => x.committed),
+    onDisc: (p, v) => r(p).onDisconnect().set(v),
+    cancelDisc: p => r(p).onDisconnect().cancel(),
+    conn: cb => { const q = db.ref('.info/connected'), f = s => cb(!!s.val()); q.on('value', f); return () => q.off('value', f); }
+  };
+}
+function localNet() {
+  const K = 'dom_localdb', ch = new BroadcastChannel('dom_localdb');
+  const load = () => { try { return JSON.parse(localStorage.getItem(K)) || {}; } catch (e) { return {}; } };
+  const parts = p => p.split('/').filter(Boolean);
+  const getIn = (d, p) => parts(p).reduce((o, k) => o == null ? undefined : o[k], d);
+  const setIn = (d, p, v) => { const ks = parts(p); let o = d; ks.slice(0, -1).forEach(k => { if (typeof o[k] !== 'object' || o[k] === null) o[k] = {}; o = o[k]; }); const l = ks[ks.length - 1]; if (v === null || v === undefined) delete o[l]; else o[l] = v; };
+  const clone = v => v === undefined ? null : JSON.parse(JSON.stringify(v));
+  const L = new Set(), notify = () => L.forEach(l => l());
+  ch.onmessage = notify;
+  const write = f => { const d = load(); f(d); localStorage.setItem(K, JSON.stringify(d)); ch.postMessage(1); setTimeout(notify, 0); };
+  const discs = new Map();
+  addEventListener('pagehide', () => discs.forEach((v, p) => write(d => setIn(d, p, v))));
+  return {
+    get: async p => clone(getIn(load(), p)),
+    set: async (p, v) => write(d => setIn(d, p, clone(v))),
+    update: async (p, o) => write(d => Object.entries(o).forEach(([k, v]) => setIn(d, p + '/' + k, clone(v)))),
+    remove: async p => write(d => setIn(d, p, null)),
+    on: (p, cb) => { let last; const l = () => { const v = JSON.stringify(getIn(load(), p) ?? null); if (v !== last) { last = v; cb(JSON.parse(v)); } }; L.add(l); setTimeout(l, 0); return () => L.delete(l); },
+    tx: async (p, fn) => { let ok = false; write(d => { const v = fn(clone(getIn(d, p))); if (v !== undefined) { setIn(d, p, v); ok = true; } }); return ok; },
+    onDisc: (p, v) => { discs.set(p, v); },
+    cancelDisc: p => { discs.delete(p); },
+    conn: cb => { cb(true); return () => {}; }
+  };
+}
+const TEST_MODE = /[?&]prova\b/.test(location.search);
+let NET = null;
+async function getNet() {
+  if (NET) return NET;
+  if (TEST_MODE) return NET = localNet();
+  const url = window.DOMINO_DB_URL || '';
+  if (!url) throw new Error(t('Falta configurar el servidor (adreça de Firebase).'));
+  if (!window.firebase) {
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js');
+  }
+  const app = firebase.apps.length ? firebase.app() : firebase.initializeApp({ databaseURL: url });
+  return NET = fbNet(app.database());
+}
+// Identificador del jugador (per tornar a entrar al mateix seient). En mode prova, un per pestanya.
+const UID = (() => { const S = TEST_MODE ? sessionStorage : localStorage; let u = null; try { u = S.getItem('dom_uid'); } catch (e) {} if (!u) { u = Math.random().toString(36).slice(2, 12); try { S.setItem('dom_uid', u); } catch (e) {} } return u; })();
+const normPL = v => { const a = [null, null, null, null]; if (v) Object.keys(v).forEach(k => { const x = v[k]; if (x && x.uid && +k >= 0 && +k < 4) a[+k] = x; }); return a; };
+function randCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 4; i++) s += A[Math.random() * A.length | 0]; return s; }
+const myName = () => store.get('dom_name', '');
+
+function onlineScreen(err = '') {
+  const st = $('#start'); st.classList.remove('off');
+  st.innerHTML = `<img class="logo" src="img/logo.jpg" alt="" style="width:min(50vw,26vh,200px)">
+  <div class="box" style="max-width:400px">
+    <h2>🌐 ${t('Partida online')}</h2>
+    <div class="opt"><label>${t('El teu nom')}</label><input id="onName" maxlength="14" value="${esc(myName())}" autocomplete="off"></div>
+    <div class="row" style="justify-content:center"><button class="btn pri" id="onCreate">${t('Crear sala')}</button></div>
+    <h3>${t('Entrar a una sala')}</h3>
+    <div class="opt"><label>${t('Codi de la sala')}</label><input id="onCode" maxlength="4" value="${esc(store.get('dom_room', ''))}" autocomplete="off" style="text-transform:uppercase;letter-spacing:4px;font-weight:700"></div>
+    <p class="err" id="onErr">${esc(err)}</p>
+    <div class="row"><button class="btn" id="onBack">${t('Tornar')}</button><button class="btn pri" id="onJoin">${t('Entrar')}</button></div>
+    <p class="mutd">${t("Qui crea la sala porta la partida: ha de tenir l'app oberta fins al final.")}</p>
+  </div>`;
+  const nameOk = () => { const n = $('#onName').value.trim(); if (!n) { $('#onErr').textContent = t('Escriu el teu nom.'); return null; } store.set('dom_name', n); return n; };
+  const busy = async f => {
+    $('#onErr').textContent = t('Connectant...');
+    st.querySelectorAll('button').forEach(b => b.disabled = true);
+    try { await f(); } catch (e) { onlineScreen(t("No s'ha pogut connectar: {0}", e && e.message || e)); }
+  };
+  $('#onBack').onclick = startScreen;
+  $('#onCreate').onclick = () => { const n = nameOk(); if (n) busy(() => createRoom(n, soloTarget)); };
+  $('#onJoin').onclick = () => {
+    const n = nameOk(); if (!n) return;
+    const c = $('#onCode').value.trim().toUpperCase();
+    if (!/^[A-Z2-9]{4}$/.test(c)) { $('#onErr').textContent = t('Escriu el codi de 4 lletres.'); return; }
+    busy(() => joinRoom(n, c));
+  };
+}
+async function claimSeat(net, code, s, name) {
+  return net.tx(`domino/${code}/players/${s}`, cur => (cur && cur.uid && cur.uid !== UID) ? undefined : { uid: UID, name, on: true });
+}
+async function createRoom(name, target) {
+  const net = await getNet();
+  let code;
+  for (let i = 0; i < 20; i++) { code = randCode(); if (!(await net.get(`domino/${code}/state`))) break; }
+  await net.set(`domino/${code}`, { state: 'lobby', target, host: UID, created: Date.now() });
+  await claimSeat(net, code, 0, name);
+  enterRoom(net, code, 0, true);
+}
+async function joinRoom(name, code) {
+  const net = await getNet();
+  const room = await net.get(`domino/${code}`);
+  if (!room || !room.state) throw new Error(t('No existeix cap sala amb aquest codi.'));
+  const pl = normPL(room.players);
+  let seat = pl.findIndex(x => x && x.uid === UID);
+  if (seat >= 0) await net.update(`domino/${code}/players/${seat}`, { name, on: true });
+  else {
+    for (const s of [2, 1, 3, 0]) { if (!pl[s] && await claimSeat(net, code, s, name)) { seat = s; break; } }
+    if (seat < 0) throw new Error(t('La sala és plena (ja hi ha 4 persones).'));
+  }
+  if (room.host === UID && room.state === 'playing') {
+    // L'amfitrió torna a obrir l'app amb la partida en marxa: la reprèn des de l'estat publicat
+    let s = null; try { s = room.g ? JSON.parse(room.g) : null; } catch (e) {}
+    if (s && s.gameOver == null) {
+      enterRoom(net, code, seat, true);
+      PL = normPL(room.players);
+      setCtrl();
+      Object.assign(G, s); NAMES = s.names || NAMES; G.req = null; G.active = true;
+      gameLoop();
+      return;
+    }
+    await net.set(`domino/${code}/state`, 'lobby');
+  }
+  enterRoom(net, code, seat, room.host === UID);
+}
+function setCtrl() {
+  CTRL = [0, 1, 2, 3].map(s => s === ME ? 'me' : PL[s] ? 'net' : 'ai');
+  NAMES = [0, 1, 2, 3].map(s => PL[s] ? PL[s].name : AI_NAMES[s]);
+}
+function enterRoom(net, code, seat, isHost) {
+  abortGame(); closeModal(true);
+  const o = ONLINE = { net, code, seat, host: isHost, offs: [], state: null, target: 100, seen: null };
+  ME = seat; PL = [null, null, null, null]; G.S = null; renderAll(); status('');
+  $('#start').classList.add('off');
+  store.set('dom_room', code);
+  const me = () => `domino/${code}/players/${o.seat}`;
+  o.offs.push(net.conn(c => { if (c && ONLINE === o) { net.onDisc(me() + '/on', false); net.update(me(), { on: true }).catch(quiet); } }));
+  o.offs.push(net.on(`domino/${code}/host`, h => { o.host = h === UID; if (o.state === 'lobby') renderLobby(); }));
+  o.offs.push(net.on(`domino/${code}/target`, v => { if (v) o.target = v; if (o.state === 'lobby') renderLobby(); }));
+  o.offs.push(net.on(`domino/${code}/players`, v => {
+    if (ONLINE !== o) return;
+    PL = normPL(v);
+    if (o.state === 'lobby') renderLobby();
+    if (o.host && o.state === 'playing' && G.S) {
+      // algú entra, surt o es desconnecta a mitja partida
+      for (let s = 0; s < 4; s++) {
+        if (s === ME) continue;
+        CTRL[s] = PL[s] ? 'net' : 'ai'; NAMES[s] = PL[s] ? PL[s].name : AI_NAMES[s];
+        if (WAITNET[s] && (!PL[s] || !PL[s].on)) WAITNET[s]();
+      }
+      saveGame();
+    }
+    renderSeats();
+  }));
+  o.offs.push(net.on(`domino/${code}/state`, st => {
+    if (ONLINE !== o) return;
+    const prev = o.state; o.state = st;
+    if (!st) {
+      leaveLocal();
+      startScreen();
+      modal(`<h2>${t('Sala tancada')}</h2><p>${t("L'amfitrió ha tancat la sala.")}</p><div class="row"><button class="btn pri" onclick="closeModal()">${t("D'acord")}</button></div>`);
+      return;
+    }
+    if (st === 'lobby') {
+      if (prev === 'playing') { cancelLocal(); abortGame(); G.S = null; o.seen = null; renderAll(); status(''); }
+      renderLobby();
+    }
+    if (st === 'playing' && MODALKIND === 'lobby') closeModal(true);
+  }));
+  o.offs.push(net.on(`domino/${code}/g`, v => { if (ONLINE === o && !o.host && v && o.state === 'playing') { try { onSnap(JSON.parse(v)); } catch (e) { console.warn(e); } } }));
+  keepAwake();
+}
+// Convidat: rep l'estat de l'amfitrió
+function onSnap(s) {
+  const o = ONLINE;
+  Object.assign(G, { S: s.S, score: s.score, target: s.target, history: s.history || [], rules: s.rules, level: s.level, handNo: s.handNo,
+    over: s.over, handDone: s.handDone, gameOver: s.gameOver, req: s.req, seq: s.seq, evs: s.evs || [] });
+  NAMES = s.names || NAMES;
+  const evs = G.evs;
+  if (o.seen != null && s.seq < o.seen) o.seen = 0;  // l'amfitrió ha començat una partida nova a la mateixa sala
+  if (o.seen == null) {
+    // acabem d'entrar: només l'estat actual
+    const last = evs[evs.length - 1];
+    if (last && ['turn', 'start', 'nomove'].includes(last.n)) fx(last);
+  } else evs.filter(e => e.k > o.seen).forEach(fx);
+  o.seen = s.seq;
+  if (G.req && G.req.p === ME) { if (LOCALREQ !== G.req.rid) clientReq(G.req.rid); }
+  else if (LOCALREQ) cancelLocal();
+  renderAll();
+}
+async function clientReq(rid) {
+  if (WAIT) cancelLocal();
+  LOCALREQ = rid;
+  let m = null;
+  try { m = await timedUser(legalMoves(G.S, ME, false)); } catch (e) { return; }
+  const o = ONLINE;
+  if (LOCALREQ !== rid || !o) return;
+  LOCALREQ = null;
+  if (m) o.net.set(`domino/${o.code}/ans/${ME}`, { rid, v: JSON.stringify(m) }).catch(quiet);
+}
+function cancelLocal() {
+  LOCALREQ = null; stopTimer();
+  if (WAIT) { const w = WAIT; WAIT = null; SEL = null; HINT = null; w.rej('cancel'); renderHand(); renderSeats(); renderBoard(); }
+}
+function leaveLocal() {
+  const o = ONLINE; if (!o) return;
+  o.offs.forEach(f => f());
+  try { o.net.cancelDisc(`domino/${o.code}/players/${o.seat}/on`); } catch (e) {}
+  ONLINE = null; cancelLocal(); abortGame(); closeModal(true);
+  ME = 0; NAMES = SOLO_NAMES.slice(); CTRL = ['me', 'ai', 'ai', 'ai']; PL = [null, null, null, null];
+  G.S = null; G.score = [0, 0]; renderAll(); status('');
+}
+async function leaveRoom() {
+  const o = ONLINE; if (!o) return;
+  const host = o.host; leaveLocal();
+  store.del('dom_room');
+  try {
+    if (host) await o.net.remove(`domino/${o.code}`);
+    else await o.net.remove(`domino/${o.code}/players/${o.seat}`);
+  } catch (e) {}
+}
+async function moveSeat(s) {
+  const o = ONLINE; if (!o || PL[s]) return;
+  const name = PL[o.seat] ? PL[o.seat].name : myName();
+  if (!(await claimSeat(o.net, o.code, s, name))) return;
+  o.net.cancelDisc(`domino/${o.code}/players/${o.seat}/on`);
+  await o.net.remove(`domino/${o.code}/players/${o.seat}`);
+  o.seat = s; ME = s;
+  o.net.onDisc(`domino/${o.code}/players/${s}/on`, false);
+  renderLobby();
+}
+async function hostStart() {
+  const o = ONLINE; if (!o || !o.host) return;
+  abortGame();
+  setCtrl();
+  resetGame(o.target);
+  await o.net.set(`domino/${o.code}/g`, null);
+  await o.net.set(`domino/${o.code}/ans`, null);
+  await o.net.set(`domino/${o.code}/state`, 'playing');
+  closeModal(true);
+  G.active = true; gameLoop();
+}
+async function backToLobby() {
+  const o = ONLINE; if (!o || !o.host) return;
+  abortGame();
+  await o.net.set(`domino/${o.code}/state`, 'lobby');
+}
+function renderLobby() {
+  const o = ONLINE; if (!o || o.state !== 'lobby') return;
+  const seat = s => {
+    const p = PL[s];
+    const who = p ? `<b>${esc(p.name)}</b>${s === ME ? ' ' + t('(tu)') : ''}${p.on ? '' : ' <span class="mutd">· ' + t('desconnectat') + '</span>'}` : `<span class="mutd">🤖 ${t('IA (lliure)')}</span>`;
+    return `<tr><td style="text-align:left">${who}</td><td>${!p ? `<button class="btn" style="padding:4px 10px" data-seat="${s}">${t('Seure aquí')}</button>` : ''}</td></tr>`;
+  };
+  const humans = PL.filter(Boolean).length;
+  const tg = [50, 100, 150, 200].map(v => `<button class="${v === o.target ? 'on' : ''}" data-v="${v}">${v}</button>`).join('');
+  modal(`<h2>🌐 ${t('Sala online')}</h2>
+    <p class="mutd" style="text-align:center;margin:0">${t("Codi de la sala (passa'l als amics):")}</p>
+    <div class="codebig">${o.code}</div>
+    <h3>${t('Parella 1')}</h3><table class="h">${seat(0)}${seat(2)}</table>
+    <h3>${t('Parella 2')}</h3><table class="h">${seat(1)}${seat(3)}</table>
+    <p class="mutd">${t('Els seients lliures els jugarà la IA. Si algú es desconnecta, la IA juga per ell fins que torni.')}</p>
+    ${o.host ? `<div class="opt"><label>${t('Objectiu')}</label><div class="seg" id="lbTg">${tg}</div></div>`
+      : `<p>${t("Partida a {0}. Esperant que l'amfitrió comenci...", '<b>' + o.target + '</b>')}</p>`}
+    <div class="row"><button class="btn" id="lbLeave">${t('Sortir')}</button>${o.host ? `<button class="btn pri" id="lbStart">${t('Començar ({0})', humans === 1 ? t('1 persona') : t('{0} persones', humans))}</button>` : ''}</div>`, null, 'lobby', true);
+  const B = $('#mbox');
+  B.querySelectorAll('[data-seat]').forEach(b => b.onclick = () => moveSeat(+b.dataset.seat));
+  B.querySelector('#lbLeave').onclick = async () => { await leaveRoom(); startScreen(); };
+  if (o.host) {
+    B.querySelector('#lbStart').onclick = hostStart;
+    B.querySelectorAll('#lbTg button').forEach(b => b.onclick = () => { o.target = +b.dataset.v; o.net.set(`domino/${o.code}/target`, o.target).catch(quiet); });
+  }
+}
+let WL = null;
+async function keepAwake() { try { if ('wakeLock' in navigator && !WL) { WL = await navigator.wakeLock.request('screen'); WL.addEventListener('release', () => { WL = null; }); } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && ONLINE) keepAwake(); });
+
+/* ---------- Inici ---------- */
+// Service worker (sense connexió): només a la web publicada (https), no en local ni dins d'un EXE/APK
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(quiet);
+window.addEventListener('resize', () => { if (G.S) renderBoard(); });
+document.body.dataset.tapet = opt('tapet');
+setLang();
+renderAll();
+startScreen();
+</script>
+</body>
+</html>
