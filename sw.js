@@ -2,10 +2,10 @@
 // Quan canviïs el joc, empaquetar\publicar.py posa aquí la versió nova.
 // IMPORTANT: totes les apps Xoriguer comparteixen l'origen xorigu3r.github.io.
 // Aquest fitxer NOMÉS toca les memòries cau que comencen per "domino-".
-const VERSION = "domino-v1.1.2";
+const VERSION = "domino-v1.2";
 const APP = [
   "./", "index.html", "firebase-config.js", "manifest.webmanifest",
-  "img/logo.jpg", "img/icona.png", "img/icona-512.png", "img/apple-touch-icon.png", "img/deco.png",
+  "img/logo.jpg", "img/icona.png", "img/icona-512.png", "img/apple-touch-icon.png", "img/deco.png", "img/marbre.jpg",
 ];
 
 self.addEventListener("install", e => {
@@ -21,6 +21,7 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;            // Firebase (gstatic) no el toquem
+  if (url.pathname.endsWith(".mp3")) return;             // el so de fons va per trossos (Range): directe a la xarxa
   if (!url.pathname.startsWith(new URL("./", self.registration.scope).pathname)) return;
 
   // Pàgina i codi: primer internet (per rebre les versions noves), si no hi ha connexió, la còpia guardada

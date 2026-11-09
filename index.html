@@ -43,12 +43,30 @@ header .ttl small{display:block;font-style:normal;font-weight:700;font-size:9px;
 #table{position:relative;flex:1;min-height:0;margin:6px;border-radius:18px;overflow:hidden;
   box-shadow:inset 0 0 0 3px #3a2412,inset 0 0 0 7px #5b3a1e,inset 0 0 40px rgba(0,0,0,.6),0 6px 20px rgba(0,0,0,.6)}
 #table::before{content:"";position:absolute;inset:0;background:var(--feltre);opacity:.55;pointer-events:none;mix-blend-mode:multiply}
-body[data-tapet=verd] #table{background:radial-gradient(ellipse at 50% 45%,#23864d,#14603a 55%,#0b3d24)}
-body[data-tapet=blau] #table{background:radial-gradient(ellipse at 50% 45%,#2a6aa8,#1b4b7d 55%,#0f2c4d)}
-body[data-tapet=vermell] #table{background:radial-gradient(ellipse at 50% 45%,#a33232,#7a1f22 55%,#4a1013)}
-body[data-tapet=fusta] #table{background:radial-gradient(ellipse at 50% 45%,#9b6a3c,#7a4f2a 55%,#4e3019)}
+:root{--spot:radial-gradient(ellipse 52% 42% at 50% 42%,rgba(255,236,190,.30) 0%,rgba(255,236,190,.12) 40%,rgba(255,236,190,0) 70%)}  /* focus de llum càlida al centre (com a la Botifarra) */
+body[data-tapet=verd] #table{background:var(--spot),radial-gradient(ellipse at 50% 45%,#23864d,#14603a 55%,#0b3d24)}
+body[data-tapet=blau] #table{background:var(--spot),radial-gradient(ellipse at 50% 45%,#2a6aa8,#1b4b7d 55%,#0f2c4d)}
+body[data-tapet=vermell] #table{background:var(--spot),radial-gradient(ellipse at 50% 45%,#a33232,#7a1f22 55%,#4a1013)}
+body[data-tapet=fusta] #table{background:var(--spot),radial-gradient(ellipse at 50% 45%,#9b6a3c,#7a4f2a 55%,#4e3019)}
 #deco{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.85}
 #deco img{width:min(62%,460px);filter:saturate(1.25) brightness(1.08) drop-shadow(0 3px 6px rgba(0,0,0,.35))}
+/* Taules de marbre de bar (rodona i rectangular), amb cantell d'alumini */
+body[data-tapet^=marbre] #table{background:radial-gradient(ellipse at 45% 35%,rgba(255,255,255,.45),rgba(255,255,255,0) 55%),radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 60%,rgba(60,50,40,.18) 100%),url(img/marbre.jpg) center/cover;
+  box-shadow:inset 0 0 0 3px #eef1f4,inset 0 0 0 6px #a9b0b7,inset 0 0 0 8px #6f767d,inset 0 2px 14px rgba(0,0,0,.25),0 12px 28px rgba(0,0,0,.75)}
+body[data-tapet^=marbre] #table::before{display:none}
+body[data-tapet^=marbre] #deco{opacity:.95}
+body[data-tapet^=marbre] #deco img{filter:saturate(1.3) drop-shadow(0 0 1px rgba(70,45,20,.9)) drop-shadow(0 0 1px rgba(70,45,20,.6)) drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+/* Rodona: un cercle de veritat (diàmetre = el costat més curt de l'espai), centrat; fora, el bar fosc */
+body[data-tapet=marbre] #table{container-type:size;background:none;box-shadow:none;overflow:visible}
+body[data-tapet=marbre] #table>*{--D:min(100cqw,100cqh)}
+body[data-tapet=marbre] #table::before{display:block;content:"";position:absolute;left:50%;top:50%;width:min(100cqw,100cqh);height:min(100cqw,100cqh);transform:translate(-50%,-50%);border-radius:50%;opacity:1;mix-blend-mode:normal;
+  background:radial-gradient(circle at 45% 35%,rgba(255,255,255,.45),rgba(255,255,255,0) 55%),radial-gradient(circle,rgba(0,0,0,0) 62%,rgba(60,50,40,.2) 100%),url(img/marbre.jpg) center/cover;
+  box-shadow:inset 0 0 0 3px #eef1f4,inset 0 0 0 6px #a9b0b7,inset 0 0 0 8px #6f767d,inset 0 2px 14px rgba(0,0,0,.25),0 12px 28px rgba(0,0,0,.75)}
+body[data-tapet=marbre] #deco img{width:calc(var(--D)*.62)}
+body[data-tapet=marbre] #board{top:calc(50% - var(--D)*.36);bottom:calc(50% - var(--D)*.36);left:calc(50% - var(--D)*.37);right:calc(50% - var(--D)*.37)}
+body[data-tapet=marbre] #seat2{top:calc(50% - var(--D)*.5 + var(--D)*.035)}
+body[data-tapet=marbre] #seat1{right:calc(50% - var(--D)*.5 + var(--D)*.02)} body[data-tapet=marbre] #seat3{left:calc(50% - var(--D)*.5 + var(--D)*.02)}
+body[data-tapet=marbre] .bub.b2{top:calc(50% - var(--D)*.5 + var(--D)*.035 + 36px)}
 
 .seat{position:absolute;display:flex;align-items:center;gap:6px;z-index:3}
 .seat .nm{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:2px 10px;font-size:13px;font-weight:600;white-space:nowrap}
@@ -421,7 +439,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} para nosotros','+{0} per a ells':'+{0} para ellos','Continuar':'Continuar','Continuar ({0})':'Continuar ({0})',
     'Hem guanyat la partida!':'¡Hemos ganado la partida!','Han guanyat ells':'Han ganado ellos','Tornar al menú':'Volver al menú',
     'Mà':'Mano','Resultat':'Resultado','Marcador':'Marcador','Encara no hi ha cap mà acabada.':'Aún no hay ninguna mano terminada.',
-    'Aspecte':'Aspecto','So':'Sonido','Joc':'Juego','Idioma':'Idioma','Automàtic':'Automático','Tapet':'Tapete','Verd':'Verde','Blau':'Azul','Vermell':'Rojo','Fusta':'Madera',
+    'Aspecte':'Aspecto','So':'Sonido','Joc':'Juego','Idioma':'Idioma','Automàtic':'Automático','Tapet':'Tapete','Verd':'Verde','Blau':'Azul','Vermell':'Rojo','Fusta':'Madera','Marbre (rodona)':'Mármol (redonda)','Marbre (rectangular)':'Mármol (rectangular)',
     'Velocitat':'Velocidad','Lenta':'Lenta','Ràpida':'Rápida','Sons':'Sonidos','Sí':'Sí','No':'No','Volum':'Volumen',
     'Què es compta':'Qué se cuenta','Tots els punts':'Todos los puntos','Només els dels contraris':'Solo los de los contrarios',
     'Qui surt':'Quién sale','Qui guanya la mà':'Quien gana la mano','Per torn':'Por turno','Doble 6 sempre':'Doble 6 siempre',
@@ -432,7 +450,7 @@ const I18N = {
     '{0} no en té: haurà de passar':'{0} no tiene: tendrá que pasar','Et quedes amb fitxes per continuar':'Te quedas con fichas para seguir',
     'Tanques la mà':'Cierras la mano','És la millor segons la simulació':'Es la mejor según la simulación','Fes dòmino!':'¡Haz dominó!',
     'Creat per Xoriguer amb IA.':'Creado por Xoriguer con IA.','Versió':'Versión','queden':'quedan','Nivell':'Nivel',
-    'Sortir':'Salir','La partida queda guardada.':'La partida queda guardada.',
+    'Sortir':'Salir',"So de fons de bar":"Sonido de fondo de bar","Volum del so de fons":"Volumen del sonido de fondo","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Sonido de fondo: «Small restaurant atmosphere» (freesound_community, Pixabay).",'La partida queda guardada.':'La partida queda guardada.',
     "Partida online":"Partida online",
     "Crear sala":"Crear sala",
     "Entrar":"Entrar",
@@ -482,7 +500,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} pour nous','+{0} per a ells':'+{0} pour eux','Continuar':'Continuer','Continuar ({0})':'Continuer ({0})',
     'Hem guanyat la partida!':'Nous avons gagné la partie !','Han guanyat ells':'Ils ont gagné','Tornar al menú':'Retour au menu',
     'Mà':'Manche','Resultat':'Résultat','Marcador':'Score','Encara no hi ha cap mà acabada.':"Aucune manche terminée pour l'instant.",
-    'Aspecte':'Apparence','So':'Son','Joc':'Jeu','Idioma':'Langue','Automàtic':'Automatique','Tapet':'Tapis','Verd':'Vert','Blau':'Bleu','Vermell':'Rouge','Fusta':'Bois',
+    'Aspecte':'Apparence','So':'Son','Joc':'Jeu','Idioma':'Langue','Automàtic':'Automatique','Tapet':'Tapis','Verd':'Vert','Blau':'Bleu','Vermell':'Rouge','Fusta':'Bois','Marbre (rodona)':'Marbre (ronde)','Marbre (rectangular)':'Marbre (rectangulaire)',
     'Velocitat':'Vitesse','Lenta':'Lente','Ràpida':'Rapide','Sons':'Sons','Sí':'Oui','No':'Non','Volum':'Volume',
     'Què es compta':'Ce qui compte','Tots els punts':'Tous les points','Només els dels contraris':'Seulement ceux des adversaires',
     'Qui surt':'Qui commence','Qui guanya la mà':'Le gagnant de la manche','Per torn':'À tour de rôle','Doble 6 sempre':'Toujours le double 6',
@@ -493,7 +511,7 @@ const I18N = {
     '{0} no en té: haurà de passar':"{0} n'en a pas : il devra passer",'Et quedes amb fitxes per continuar':'Tu gardes de quoi continuer',
     'Tanques la mà':'Tu bloques la manche','És la millor segons la simulació':'La meilleure selon la simulation','Fes dòmino!':'Fais domino !',
     'Creat per Xoriguer amb IA.':'Créé par Xoriguer avec l’IA.','Versió':'Version','queden':'restent','Nivell':'Niveau',
-    'Sortir':'Quitter','La partida queda guardada.':'La partie est sauvegardée.',
+    'Sortir':'Quitter',"So de fons de bar":"Ambiance sonore de bar","Volum del so de fons":"Volume de l’ambiance","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Ambiance sonore : « Small restaurant atmosphere » (freesound_community, Pixabay).",'La partida queda guardada.':'La partie est sauvegardée.',
     "Partida online":"Partie en ligne",
     "Crear sala":"Créer une salle",
     "Entrar":"Entrer",
@@ -543,7 +561,7 @@ const I18N = {
     '+{0} per a nosaltres':'+{0} for us','+{0} per a ells':'+{0} for them','Continuar':'Continue','Continuar ({0})':'Continue ({0})',
     'Hem guanyat la partida!':'We won the game!','Han guanyat ells':'They won','Tornar al menú':'Back to menu',
     'Mà':'Hand','Resultat':'Result','Marcador':'Score','Encara no hi ha cap mà acabada.':'No hand finished yet.',
-    'Aspecte':'Look','So':'Sound','Joc':'Game','Idioma':'Language','Automàtic':'Automatic','Tapet':'Table','Verd':'Green','Blau':'Blue','Vermell':'Red','Fusta':'Wood',
+    'Aspecte':'Look','So':'Sound','Joc':'Game','Idioma':'Language','Automàtic':'Automatic','Tapet':'Table','Verd':'Green','Blau':'Blue','Vermell':'Red','Fusta':'Wood','Marbre (rodona)':'Marble (round)','Marbre (rectangular)':'Marble (rectangular)',
     'Velocitat':'Speed','Lenta':'Slow','Ràpida':'Fast','Sons':'Sounds','Sí':'Yes','No':'No','Volum':'Volume',
     'Què es compta':'What counts','Tots els punts':'All points','Només els dels contraris':"Only the opponents'",
     'Qui surt':'Who leads','Qui guanya la mà':'Winner of the hand','Per torn':'In turn','Doble 6 sempre':'Always double six',
@@ -554,7 +572,7 @@ const I18N = {
     '{0} no en té: haurà de passar':'{0} has none: they will pass','Et quedes amb fitxes per continuar':'You keep tiles to follow',
     'Tanques la mà':'You block the hand','És la millor segons la simulació':'Best according to the simulation','Fes dòmino!':'Go domino!',
     'Creat per Xoriguer amb IA.':'Made by Xoriguer with AI.','Versió':'Version','queden':'left','Nivell':'Level',
-    'Sortir':'Exit','La partida queda guardada.':'The game is saved.',
+    'Sortir':'Exit',"So de fons de bar":"Bar background sound","Volum del so de fons":"Background sound volume","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Background sound: “Small restaurant atmosphere” (freesound_community, Pixabay).",'La partida queda guardada.':'The game is saved.',
     "Partida online":"Online game",
     "Crear sala":"Create room",
     "Entrar":"Join",
@@ -623,9 +641,11 @@ function applyLang() {
 /* ---------- Opcions ---------- */
 const OPTS = [
   { k: 'idioma', g: 'Aspecte', l: 'Idioma', d: 'auto', v: [['auto', 'Automàtic'], ['ca', 'Català'], ['es', 'Español'], ['fr', 'Français'], ['en', 'English']] },
-  { k: 'tapet', g: 'Aspecte', l: 'Tapet', d: 'verd', v: [['verd', 'Verd'], ['blau', 'Blau'], ['vermell', 'Vermell'], ['fusta', 'Fusta']] },
+  { k: 'tapet', g: 'Aspecte', l: 'Tapet', d: 'verd', v: [['verd', 'Verd'], ['blau', 'Blau'], ['vermell', 'Vermell'], ['fusta', 'Fusta'], ['marbre', 'Marbre (rodona)'], ['marbreq', 'Marbre (rectangular)']] },
   { k: 'so', g: 'So', l: 'Sons', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
   { k: 'vol', g: 'So', l: 'Volum', d: '70', range: true },
+  { k: 'bar', g: 'So', l: 'So de fons de bar', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
+  { k: 'volbar', g: 'So', l: 'Volum del so de fons', d: '45', range: true },
   { k: 'vel', g: 'Joc', l: 'Velocitat', d: '1', v: [['1.6', 'Lenta'], ['1', 'Normal'], ['0.55', 'Ràpida']] },
   { k: 'nivell', g: 'Joc', l: 'Nivell de la IA', d: 'normal', v: [['facil', 'Fàcil'], ['normal', 'Normal'], ['dificil', 'Difícil']] },
   { k: 'punts', g: 'Regles', l: 'Què es compta', d: 'tots', v: [['tots', 'Tots els punts'], ['contraris', 'Només els dels contraris']] },
@@ -633,7 +653,7 @@ const OPTS = [
   { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
 ];
 const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
-const APP_VERSION = '1.1.2', APP_DATE = '2026-11-09';
+const APP_VERSION = '1.2', APP_DATE = '2026-11-09';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
@@ -643,7 +663,9 @@ const opt = k => store.get('dom_opt_' + k, OPTS.find(o => o.k === k).d);
 function setOpt(k, v) {
   store.set('dom_opt_' + k, v);
   if (k === 'idioma') setLang();
-  if (k === 'tapet') document.body.dataset.tapet = v;
+  if (k === 'tapet') { document.body.dataset.tapet = v; snd('tile'); if (G.S) renderBoard(); }
+  if (k === 'bar') ambSync();
+  if (k === 'volbar') setBarVolume();
 }
 function setLang() {
   const o = opt('idioma');
@@ -661,16 +683,31 @@ function snd(kind) {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
     const vol = (+opt('vol') || 0) / 100, now = AC.currentTime;
     if (kind === 'tile') {
-      // "clac" de fitxa: soroll curt filtrat + to greu
-      const len = .09, buf = AC.createBuffer(1, AC.sampleRate * len, AC.sampleRate), d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 6);
-      const src = AC.createBufferSource(); src.buffer = buf;
-      const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2200 + Math.random() * 600; f.Q.value = 1.4;
-      const g = AC.createGain(); g.gain.value = .9 * vol;
-      src.connect(f).connect(g).connect(AC.destination); src.start(now);
-      const o = AC.createOscillator(), g2 = AC.createGain(); o.frequency.value = 180; o.type = 'triangle';
-      g2.gain.setValueAtTime(.25 * vol, now); g2.gain.exponentialRampToValueAtTime(.001, now + .06);
-      o.connect(g2).connect(AC.destination); o.start(now); o.stop(now + .07);
+      const noiseBuf = (len, pw) => { const buf = AC.createBuffer(1, Math.ceil(AC.sampleRate * len), AC.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, pw); return buf; };
+      const hit = (t0, gain, freq, q, len, pw, type = 'bandpass') => {
+        const src = AC.createBufferSource(); src.buffer = noiseBuf(len, pw);
+        const f = AC.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+        const g = AC.createGain(); g.gain.value = gain * vol;
+        src.connect(f).connect(g).connect(AC.destination); src.start(t0);
+      };
+      const tone = (t0, freq, gain, dur) => {
+        const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.value = freq;
+        g.gain.setValueAtTime(gain * vol, t0); g.gain.exponentialRampToValueAtTime(.0005, t0 + dur);
+        o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + dur + .01);
+      };
+      if (String(opt('tapet')).startsWith('marbre')) {
+        // "clac!" de fitxa sobre marbre: impacte molt curt i agut, ressonància de la fitxa i un petit rebot
+        const fr = 3200 + Math.random() * 900;
+        hit(now, 1.25, fr, 2.2, .035, 9);
+        hit(now, .55, 6500, .9, .02, 12, 'highpass');
+        tone(now, 2350 + Math.random() * 250, .16, .07);
+        tone(now, 1150 + Math.random() * 120, .10, .05);
+        hit(now + .045 + Math.random() * .015, .35, fr * 1.05, 2.5, .02, 10);  // rebot
+      } else {
+        // sobre feltre: cop apagat
+        hit(now, 1.0, 1100 + Math.random() * 300, 1.1, .07, 6, 'lowpass');
+        tone(now, 190, .22, .06);
+      }
       return;
     }
     const notes = { turn: [660], pass: [300, 240], win: [523, 659, 784, 1046], lose: [392, 330, 262], domino: [784, 988, 1175] }[kind] || [440];
@@ -682,6 +719,28 @@ function snd(kind) {
     });
   } catch (e) {}
 }
+
+/* So de fons de bar (opció "bar"): so/bar.mp3 (ambient d'un restaurant petit, el mateix de la Botifarra) en bucle */
+let AMB = null;
+const volBar = () => Math.max(0, Math.min(100, +opt('volbar'))) / 100;
+function ambient(on) {
+  if (!on) { if (AMB) { const a = AMB; AMB = null; fadeTo(a, 0, 600, () => a.pause()); } return; }
+  if (AMB || typeof Audio === 'undefined') return;
+  try {
+    const a = new Audio('so/bar.mp3'); a.loop = true; a.volume = 0;
+    a.play().then(() => fadeTo(a, volBar(), 1500)).catch(() => { if (AMB === a) AMB = null; });  // el navegador no deixa sonar sense un toc previ
+    AMB = a;
+  } catch (e) { AMB = null; }
+}
+function fadeTo(a, v, ms, done) {
+  const v0 = a.volume, t0 = performance.now(); clearInterval(a._fade);
+  a._fade = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / ms); try { a.volume = v0 + (v - v0) * k; } catch (e) {} if (k >= 1) { clearInterval(a._fade); if (done) done(); } }, 40);
+}
+function setBarVolume() { if (AMB) { clearInterval(AMB._fade); AMB.volume = volBar(); } }
+const ambSync = () => ambient(opt('bar') === '1' && document.visibilityState === 'visible');
+// el navegador només deixa sonar després d'un toc: s'engega al primer; i s'atura si amagues l'app
+document.addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); if (opt('bar') === '1' && !AMB) ambSync(); });
+document.addEventListener('visibilitychange', ambSync);
 
 /* ---------- Dibuix de fitxes (SVG) ---------- */
 const PIPS = { 0: [], 1: [[.5, .5]], 2: [[.27, .27], [.73, .73]], 3: [[.27, .27], [.5, .5], [.73, .73]],
@@ -927,7 +986,8 @@ function optHtml() {
 }
 function aboutHtml() {
   return `<div style="text-align:center"><img src="img/logo.jpg" style="width:180px;border-radius:12px"><div class="big">Dòmino · Xoriguer</div>
-  <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xoriguer amb IA.')}</p></div>`;
+  <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xoriguer amb IA.')}</p>
+  <p class="mutd">${t('So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).')}</p></div>`;
 }
 function stats() { try { return JSON.parse(store.get('dom_stats', '{}')) || {}; } catch (e) { return {}; } }
 function addStat(k, n = 1) { const s = stats(); s[k] = (s[k] || 0) + n; store.set('dom_stats', JSON.stringify(s)); }
