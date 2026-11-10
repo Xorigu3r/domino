@@ -38,6 +38,10 @@ header .ttl small{display:block;font-style:normal;font-weight:700;font-size:9px;
 .tools{display:flex;gap:4px}
 .tools button{background:#1b1714;border:1px solid #3b3128;border-radius:8px;width:36px;height:36px;font-size:17px;display:grid;place-items:center}
 .tools button:hover{border-color:var(--gold)}
+#bChat{display:none!important} body.chat-on #bChat{display:grid!important}
+.chat{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.chat .btn{padding:10px 8px;font-size:15px}
+.bub.xat{background:#fff3df;border:2px solid var(--gold)}
 
 /* ---------- Tapet ---------- */
 #table{position:relative;flex:1;min-height:0;margin:6px;border-radius:18px;overflow:hidden;
@@ -192,6 +196,7 @@ button:disabled{opacity:.5;cursor:default}
     <div class="tg" id="scTarget"></div>
   </div>
   <div class="tools">
+    <button id="bChat" data-tt="Frases ràpides" title="Frases ràpides">💬</button>
     <button id="bHist" data-tt="Punts" title="Punts">📜</button>
     <button id="bRules" data-tt="Regles" title="Regles">❓</button>
     <button id="bOpt" data-tt="Opcions" title="Opcions">⚙</button>
@@ -450,7 +455,7 @@ const I18N = {
     '{0} no en té: haurà de passar':'{0} no tiene: tendrá que pasar','Et quedes amb fitxes per continuar':'Te quedas con fichas para seguir',
     'Tanques la mà':'Cierras la mano','És la millor segons la simulació':'Es la mejor según la simulación','Fes dòmino!':'¡Haz dominó!',
     'Creat per Xoriguer amb IA.':'Creado por Xoriguer con IA.','Versió':'Versión','queden':'quedan','Nivell':'Nivel',
-    'Sortir':'Salir',"So de fons de bar":"Sonido de fondo de bar","Volum del so de fons":"Volumen del sonido de fondo","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Sonido de fondo: «Small restaurant atmosphere» (freesound_community, Pixabay).",'La partida queda guardada.':'La partida queda guardada.',
+    'Sortir':'Salir',"Frases ràpides":"Frases rápidas","Comentaris de la IA":"Comentarios de la IA","Bona!":"¡Buena!","Ben jugat!":"¡Bien jugado!","Ai, ai, ai...":"Ay, ay, ay...","Va, va!":"¡Venga, va!","Quina sort!":"¡Qué suerte!","Perdó!":"¡Perdón!","Ja et val!":"¡Ya te vale!","Som-hi!":"¡Vamos!","So de fons de bar":"Sonido de fondo de bar","Volum del so de fons":"Volumen del sonido de fondo","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Sonido de fondo: «Small restaurant atmosphere» (freesound_community, Pixabay).",'La partida queda guardada.':'La partida queda guardada.',
     "Partida online":"Partida online",
     "Crear sala":"Crear sala",
     "Entrar":"Entrar",
@@ -511,7 +516,7 @@ const I18N = {
     '{0} no en té: haurà de passar':"{0} n'en a pas : il devra passer",'Et quedes amb fitxes per continuar':'Tu gardes de quoi continuer',
     'Tanques la mà':'Tu bloques la manche','És la millor segons la simulació':'La meilleure selon la simulation','Fes dòmino!':'Fais domino !',
     'Creat per Xoriguer amb IA.':'Créé par Xoriguer avec l’IA.','Versió':'Version','queden':'restent','Nivell':'Niveau',
-    'Sortir':'Quitter',"So de fons de bar":"Ambiance sonore de bar","Volum del so de fons":"Volume de l’ambiance","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Ambiance sonore : « Small restaurant atmosphere » (freesound_community, Pixabay).",'La partida queda guardada.':'La partie est sauvegardée.',
+    'Sortir':'Quitter',"Frases ràpides":"Phrases rapides","Comentaris de la IA":"Commentaires de l’IA","Bona!":"Bien vu !","Ben jugat!":"Bien joué !","Ai, ai, ai...":"Aïe, aïe, aïe...","Va, va!":"Allez, allez !","Quina sort!":"Quelle chance !","Perdó!":"Pardon !","Ja et val!":"Franchement !","Som-hi!":"On y va !","So de fons de bar":"Ambiance sonore de bar","Volum del so de fons":"Volume de l’ambiance","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Ambiance sonore : « Small restaurant atmosphere » (freesound_community, Pixabay).",'La partida queda guardada.':'La partie est sauvegardée.',
     "Partida online":"Partie en ligne",
     "Crear sala":"Créer une salle",
     "Entrar":"Entrer",
@@ -572,7 +577,7 @@ const I18N = {
     '{0} no en té: haurà de passar':'{0} has none: they will pass','Et quedes amb fitxes per continuar':'You keep tiles to follow',
     'Tanques la mà':'You block the hand','És la millor segons la simulació':'Best according to the simulation','Fes dòmino!':'Go domino!',
     'Creat per Xoriguer amb IA.':'Made by Xoriguer with AI.','Versió':'Version','queden':'left','Nivell':'Level',
-    'Sortir':'Exit',"So de fons de bar":"Bar background sound","Volum del so de fons":"Background sound volume","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Background sound: “Small restaurant atmosphere” (freesound_community, Pixabay).",'La partida queda guardada.':'The game is saved.',
+    'Sortir':'Exit',"Frases ràpides":"Quick phrases","Comentaris de la IA":"AI comments","Bona!":"Nice!","Ben jugat!":"Well played!","Ai, ai, ai...":"Oh dear...","Va, va!":"Come on!","Quina sort!":"Lucky!","Perdó!":"Sorry!","Ja et val!":"Really?!","Som-hi!":"Let’s go!","So de fons de bar":"Bar background sound","Volum del so de fons":"Background sound volume","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Background sound: “Small restaurant atmosphere” (freesound_community, Pixabay).",'La partida queda guardada.':'The game is saved.',
     "Partida online":"Online game",
     "Crear sala":"Create room",
     "Entrar":"Join",
@@ -648,12 +653,13 @@ const OPTS = [
   { k: 'volbar', g: 'So', l: 'Volum del so de fons', d: '45', range: true },
   { k: 'vel', g: 'Joc', l: 'Velocitat', d: '1', v: [['1.6', 'Lenta'], ['1', 'Normal'], ['0.55', 'Ràpida']] },
   { k: 'nivell', g: 'Joc', l: 'Nivell de la IA', d: 'normal', v: [['facil', 'Fàcil'], ['normal', 'Normal'], ['dificil', 'Difícil']] },
+  { k: 'xat', g: 'Joc', l: 'Comentaris de la IA', d: '1', v: [['1', 'Sí'], ['0', 'No']] },
   { k: 'punts', g: 'Regles', l: 'Què es compta', d: 'tots', v: [['tots', 'Tots els punts'], ['contraris', 'Només els dels contraris']] },
   { k: 'surt', g: 'Regles', l: 'Qui surt', d: 'guanya', v: [['guanya', 'Qui guanya la mà'], ['torn', 'Per torn'], ['doble6', 'Doble 6 sempre']] },
   { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
 ];
 const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
-const APP_VERSION = '1.2.1', APP_DATE = '2026-11-09';
+const APP_VERSION = '1.3', APP_DATE = '2026-11-10';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
@@ -934,7 +940,7 @@ function renderScore() {
   $('#scThem').textContent = G.score[1 - team(ME)];
   $('#scTarget').textContent = G.S || G.active ? '/' + G.target : '';
 }
-function renderAll() { renderScore(); renderSeats(); renderHand(); renderBoard(); applyLang(); }
+function renderAll() { renderScore(); renderSeats(); renderHand(); renderBoard(); applyLang(); document.body.classList.toggle('chat-on', !!(G.S && (G.active || (ONLINE && ONLINE.state === 'playing')))); }
 let statusTxt = '';
 function status(s) { statusTxt = s; $('#status').textContent = s; }
 function bubble(p, txt, ms = 1400) {
@@ -1099,7 +1105,7 @@ async function playHand() {
     if (!ms.length) {
       emit({ n: 'nomove', p }); renderSeats();
       await sleep(p === ME ? 900 : 600);
-      applyPass(S, p); emit({ n: 'pass', p }); renderAll();
+      applyPass(S, p); emit({ n: 'pass', p }); renderAll(); aiTease(p);
       await sleep(900);
       continue;
     }
@@ -1211,6 +1217,7 @@ async function endHand(res) {
   const winner = Math.max(...G.score) >= G.target && G.score[0] !== G.score[1] ? (G.score[0] > G.score[1] ? 0 : 1) : -1;
   if (winner >= 0) { G.gameOver = winner; G.active = false; }
   emit({ n: 'end', res, hands: S.hands, winner });
+  aiComment(res);
   if (winner >= 0) { if (!ONLINE) store.del('dom_save'); return true; }
   await new Promise((r1, r2) => { ENDWAIT = { res: r1, rej: r2 }; });
   return false;
@@ -1255,6 +1262,56 @@ function showEnd(ev) {
   }, 1000);
 }
 
+/* ---------- Frases ràpides ----------
+   Només frases fixes (sense text lliure). Online van a domino/CODI/chat {s: seient, i: frase, ts}.
+   En solitari la IA de vegades respon i comenta (opció "Comentaris de la IA"); online, els comentaris de la IA els envia l'amfitrió. */
+const FRASES = ['Bona!', 'Ben jugat!', 'Ai, ai, ai...', 'Va, va!', 'Quina sort!', 'Perdó!', 'Ja et val!', 'Som-hi!', '👍', '😂'];
+let lastChat = 0;
+function chatBubble(p, i) { bubble(p, t(FRASES[i]), 2600 / (+opt('vel') || 1)); const b = $('#table .bub:last-child'); if (b) b.classList.add('xat'); }
+function sendChat(i) {
+  if (Date.now() - lastChat < 1500) return; lastChat = Date.now();
+  const o = ONLINE;
+  if (o) { o.net.push(`domino/${o.code}/chat`, { s: ME, i, ts: Date.now() }); return; }
+  chatBubble(ME, i); aiReply(i);
+}
+const isAI = p => p !== ME && (ONLINE ? !PL[p] : true);
+const sayAI = (p, i) => {
+  if (!isAI(p) || opt('xat') !== '1') return;
+  if (ONLINE) { if (ONLINE.host) ONLINE.net.push(`domino/${ONLINE.code}/chat`, { s: p, i, ts: Date.now() }); return; }
+  chatBubble(p, i);
+};
+const pickR = a => a[Math.random() * a.length | 0];
+function aiReply(i) {
+  if (Math.random() < .4) return;
+  const ais = [0, 1, 2, 3].filter(isAI); if (!ais.length) return;
+  const mate = ais.find(p => p === (ME + 2) % 4), rivals = ais.filter(p => team(p) !== team(ME));
+  let p, r;
+  if ([0, 1, 7, 8].includes(i) && mate !== undefined) { p = mate; r = pickR([7, 8, 1]); }          // ànims → la parella hi està d'acord
+  else if ([4, 6, 9].includes(i) && rivals.length) { p = pickR(rivals); r = pickR([2, 9, 3]); }    // pulles → els rivals es queixen
+  else { p = mate !== undefined && Math.random() < .6 ? mate : pickR(ais); r = pickR([8, 9, 7, 3]); }
+  setTimeout(() => sayAI(p, r), 1100 + Math.random() * 900);
+}
+// quan algú passa, de vegades un rival (IA) en fa broma o el company l'anima
+function aiTease(p) {
+  if ((!G.active && !ONLINE) || Math.random() < .8) return;
+  const rivals = [0, 1, 2, 3].filter(q => isAI(q) && team(q) !== team(p)), mate = (p + 2) % 4;
+  if (rivals.length && Math.random() < .6) setTimeout(() => sayAI(pickR(rivals), pickR([9, 4])), 500);
+  else if (isAI(mate)) setTimeout(() => sayAI(mate, pickR([3, 2])), 500);
+}
+// final de mà: qui guanya molts punts ho celebra; qui perd es queixa
+function aiComment(res) {
+  if (res.w < 0 || res.pts < 15 || Math.random() < .5) return;
+  const won = [0, 1, 2, 3].filter(p => isAI(p) && team(p) === res.w), lost = [0, 1, 2, 3].filter(p => isAI(p) && team(p) !== res.w);
+  if (won.length && Math.random() < .6) setTimeout(() => sayAI(pickR(won), pickR([0, 1, 8])), 900);
+  else if (lost.length) setTimeout(() => sayAI(pickR(lost), pickR([2, 4])), 900);
+}
+$('#bChat').onclick = () => {
+  if (!G.S) return;
+  modal(`<h2>💬 ${t('Frases ràpides')}</h2><div class="chat">${FRASES.map((f, i) => `<button class="btn" data-i="${i}">${t(f)}</button>`).join('')}</div>
+    <div class="row"><button class="btn" onclick="closeModal()">${t('Tancar')}</button></div>`);
+  $('#mbox').querySelectorAll('[data-i]').forEach(b => b.onclick = () => { closeModal(); sendChat(+b.dataset.i); });
+};
+
 /* ---------- Online (Firebase Realtime Database) ----------
    domino/CODI = {state:'lobby'|'playing', host:uid, target, created, players:{seient:{uid,name,on}}, g:'estat JSON', ans:{seient:{rid,v}}}
    - fbNet: Firebase (SDK compat, es carrega només en entrar al mode online)
@@ -1267,6 +1324,12 @@ function fbNet(db) {
     set: (p, v) => r(p).set(v),
     update: (p, v) => r(p).update(v),
     remove: p => r(p).remove(),
+    push: (p, v) => { const k = r(p).push(); k.set(v).catch(quiet); return k.key; },
+    onAdded: (p, cb) => {  // l'últim fill que ja hi ha i tots els nous, en ordre
+      let q = null, dead = false; const f = s => cb(s.key, s.val());
+      r(p).orderByKey().limitToLast(1).get().then(s => { if (dead) return; let k = null; s.forEach(c => { k = c.key; }); q = k ? r(p).orderByKey().startAt(k) : r(p).orderByKey(); q.on('child_added', f); });
+      return () => { dead = true; if (q) q.off('child_added', f); };
+    },
     on: (p, cb) => { const f = s => cb(s.val()); r(p).on('value', f); return () => r(p).off('value', f); },
     tx: (p, fn) => r(p).transaction(fn).then(x => x.committed),
     onDisc: (p, v) => r(p).onDisconnect().set(v),
@@ -1284,13 +1347,19 @@ function localNet() {
   const L = new Set(), notify = () => L.forEach(l => l());
   ch.onmessage = notify;
   const write = f => { const d = load(); f(d); localStorage.setItem(K, JSON.stringify(d)); ch.postMessage(1); setTimeout(notify, 0); };
-  const discs = new Map();
+  const discs = new Map(); let seq = 0;
   addEventListener('pagehide', () => discs.forEach((v, p) => write(d => setIn(d, p, v))));
   return {
     get: async p => clone(getIn(load(), p)),
     set: async (p, v) => write(d => setIn(d, p, clone(v))),
     update: async (p, o) => write(d => Object.entries(o).forEach(([k, v]) => setIn(d, p + '/' + k, clone(v)))),
     remove: async p => write(d => setIn(d, p, null)),
+    push: (p, v) => { const k = Date.now().toString(36).padStart(9, '0') + (seq++).toString(36).padStart(5, '0') + Math.random().toString(36).slice(2, 6); write(d => setIn(d, p + '/' + k, clone(v))); return k; },
+    onAdded: (p, cb) => {
+      const ks0 = Object.keys(getIn(load(), p) || {}).sort(); let lastK = ks0.length ? ks0[ks0.length - 1] : null, first = true;
+      const l = () => { const o = getIn(load(), p) || {}; const ks = Object.keys(o).sort().filter(k => lastK === null || (first ? k >= lastK : k > lastK)); first = false; ks.forEach(k => { lastK = k; cb(k, clone(o[k])); }); };
+      L.add(l); setTimeout(l, 0); return () => L.delete(l);
+    },
     on: (p, cb) => { let last; const l = () => { const v = JSON.stringify(getIn(load(), p) ?? null); if (v !== last) { last = v; cb(JSON.parse(v)); } }; L.add(l); setTimeout(l, 0); return () => L.delete(l); },
     tx: async (p, fn) => { let ok = false; write(d => { const v = fn(clone(getIn(d, p))); if (v !== undefined) { setIn(d, p, v); ok = true; } }); return ok; },
     onDisc: (p, v) => { discs.set(p, v); },
@@ -1395,6 +1464,11 @@ function enterRoom(net, code, seat, isHost) {
   store.set('dom_room', code);
   const me = () => `domino/${code}/players/${o.seat}`;
   o.offs.push(net.conn(c => { if (c && ONLINE === o) { net.onDisc(me() + '/on', false); net.update(me(), { on: true }).catch(quiet); } }));
+  o.chatStart = Date.now();
+  o.offs.push(net.onAdded(`domino/${code}/chat`, (k, m) => {
+    if (ONLINE !== o || !m || !(m.ts >= o.chatStart - 3000)) return;  // només les frases noves
+    if (FRASES[m.i] !== undefined && m.s >= 0 && m.s < 4) chatBubble(m.s, m.i);
+  }));
   o.offs.push(net.on(`domino/${code}/host`, h => { o.host = h === UID; if (o.state === 'lobby') renderLobby(); }));
   o.offs.push(net.on(`domino/${code}/target`, v => { if (v) o.target = v; if (o.state === 'lobby') renderLobby(); }));
   o.offs.push(net.on(`domino/${code}/players`, v => {
@@ -1496,6 +1570,7 @@ async function hostStart() {
   resetGame(o.target);
   await o.net.set(`domino/${o.code}/g`, null);
   await o.net.set(`domino/${o.code}/ans`, null);
+  await o.net.set(`domino/${o.code}/chat`, null);
   await o.net.set(`domino/${o.code}/state`, 'playing');
   closeModal(true);
   G.active = true; gameLoop();
