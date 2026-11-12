@@ -2,8 +2,8 @@
 // Quan canviïs el joc, empaquetar\publicar.py posa aquí la versió nova.
 // IMPORTANT: totes les apps Xoriguer comparteixen l'origen xorigu3r.github.io.
 // Aquest fitxer NOMÉS toca les memòries cau que comencen per "domino-".
-const VERSION = "domino-v1.3";
-const APP = [
+const VERSION = "domino-v1.4";
+const APP = [ "marca/marca.css", "marca/Montserrat-ExtraBold.ttf",
   "./", "index.html", "firebase-config.js", "manifest.webmanifest",
   "img/logo.jpg", "img/icona.png", "img/icona-512.png", "img/apple-touch-icon.png", "img/deco.png", "img/marbre.jpg",
 ];
