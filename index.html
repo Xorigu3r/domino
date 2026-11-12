@@ -455,7 +455,7 @@ const I18N = {
     'Descarregues {0} punts':'Descargas {0} puntos','Et treus un doble de sobre':'Te quitas un doble de encima',
     '{0} no en té: haurà de passar':'{0} no tiene: tendrá que pasar','Et quedes amb fitxes per continuar':'Te quedas con fichas para seguir',
     'Tanques la mà':'Cierras la mano','És la millor segons la simulació':'Es la mejor según la simulación','Fes dòmino!':'¡Haz dominó!',
-    'Creat per Xoriguer amb IA.':'Creado por Xoriguer con IA.','Versió':'Versión','queden':'quedan','Nivell':'Nivel',
+    'Creat per Xavier Musté.':'Creado por Xavier Musté.','Versió':'Versión','queden':'quedan','Nivell':'Nivel',
     'Sortir':'Salir',"Frases ràpides":"Frases rápidas","Comentaris de la IA":"Comentarios de la IA","Bona!":"¡Buena!","Ben jugat!":"¡Bien jugado!","Ai, ai, ai...":"Ay, ay, ay...","Va, va!":"¡Venga, va!","Quina sort!":"¡Qué suerte!","Perdó!":"¡Perdón!","Ja et val!":"¡Ya te vale!","Som-hi!":"¡Vamos!","So de fons de bar":"Sonido de fondo de bar","Volum del so de fons":"Volumen del sonido de fondo","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Sonido de fondo: «Small restaurant atmosphere» (freesound_community, Pixabay).",'La partida queda guardada.':'La partida queda guardada.',
     "Partida online":"Partida online",
     "Crear sala":"Crear sala",
@@ -516,7 +516,7 @@ const I18N = {
     'Descarregues {0} punts':'Tu te débarrasses de {0} points','Et treus un doble de sobre':'Tu te libères d’un double',
     '{0} no en té: haurà de passar':"{0} n'en a pas : il devra passer",'Et quedes amb fitxes per continuar':'Tu gardes de quoi continuer',
     'Tanques la mà':'Tu bloques la manche','És la millor segons la simulació':'La meilleure selon la simulation','Fes dòmino!':'Fais domino !',
-    'Creat per Xoriguer amb IA.':'Créé par Xoriguer avec l’IA.','Versió':'Version','queden':'restent','Nivell':'Niveau',
+    'Creat per Xavier Musté.':'Créé par Xavier Musté.','Versió':'Version','queden':'restent','Nivell':'Niveau',
     'Sortir':'Quitter',"Frases ràpides":"Phrases rapides","Comentaris de la IA":"Commentaires de l’IA","Bona!":"Bien vu !","Ben jugat!":"Bien joué !","Ai, ai, ai...":"Aïe, aïe, aïe...","Va, va!":"Allez, allez !","Quina sort!":"Quelle chance !","Perdó!":"Pardon !","Ja et val!":"Franchement !","Som-hi!":"On y va !","So de fons de bar":"Ambiance sonore de bar","Volum del so de fons":"Volume de l’ambiance","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Ambiance sonore : « Small restaurant atmosphere » (freesound_community, Pixabay).",'La partida queda guardada.':'La partie est sauvegardée.',
     "Partida online":"Partie en ligne",
     "Crear sala":"Créer une salle",
@@ -577,7 +577,7 @@ const I18N = {
     'Descarregues {0} punts':'You unload {0} points','Et treus un doble de sobre':'You get rid of a double',
     '{0} no en té: haurà de passar':'{0} has none: they will pass','Et quedes amb fitxes per continuar':'You keep tiles to follow',
     'Tanques la mà':'You block the hand','És la millor segons la simulació':'Best according to the simulation','Fes dòmino!':'Go domino!',
-    'Creat per Xoriguer amb IA.':'Made by Xoriguer with AI.','Versió':'Version','queden':'left','Nivell':'Level',
+    'Creat per Xavier Musté.':'Made by Xavier Musté.','Versió':'Version','queden':'left','Nivell':'Level',
     'Sortir':'Exit',"Frases ràpides":"Quick phrases","Comentaris de la IA":"AI comments","Bona!":"Nice!","Ben jugat!":"Well played!","Ai, ai, ai...":"Oh dear...","Va, va!":"Come on!","Quina sort!":"Lucky!","Perdó!":"Sorry!","Ja et val!":"Really?!","Som-hi!":"Let’s go!","So de fons de bar":"Bar background sound","Volum del so de fons":"Background sound volume","So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).":"Background sound: “Small restaurant atmosphere” (freesound_community, Pixabay).",'La partida queda guardada.':'The game is saved.',
     "Partida online":"Online game",
     "Crear sala":"Create room",
@@ -660,7 +660,7 @@ const OPTS = [
   { k: 'capicua', g: 'Regles', l: 'Capicua +10', d: '0', v: [['1', 'Sí'], ['0', 'No']] },
 ];
 const OPT_TABS = ['Aspecte', 'So', 'Joc', 'Regles', 'Quant a'];
-const APP_VERSION = '1.4', APP_DATE = '2026-11-12';
+const APP_VERSION = '1.5', APP_DATE = '2026-11-12';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
@@ -993,7 +993,7 @@ function optHtml() {
 }
 function aboutHtml() {
   return `<div style="text-align:center"><img src="img/logo.jpg" style="width:180px;border-radius:12px"><div class="big">Dòmino · Xoriguer</div>
-  <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xoriguer amb IA.')}</p>
+  <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xavier Musté.')}</p>
   <p class="mutd">${t('So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).')}</p></div>`;
 }
 function stats() { try { return JSON.parse(store.get('dom_stats', '{}')) || {}; } catch (e) { return {}; } }
@@ -1040,7 +1040,7 @@ function startScreen() {
     <button class="btn" onclick="optTab='Aspecte';modal(optHtml())">${t('Opcions')}</button>
   </div>
   <div class="seg langs">${langs}</div>
-  <div class="cr">${t('Creat per Xoriguer amb IA.')} · v${APP_VERSION}</div>`;
+  <div class="cr">${t('Creat per Xavier Musté.')} · v${APP_VERSION}</div>`;
 }
 let soloTarget = +store.get('dom_target', '100');
 function soloScreen() {
