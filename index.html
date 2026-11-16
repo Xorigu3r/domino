@@ -991,10 +991,16 @@ function optHtml() {
   }).join('') + ((optTab === 'Regles' || optTab === 'Joc') && (G.active || ONLINE) ? `<p class="mutd">${t('Els canvis de regles valen per a la partida següent.')}${ONLINE ? ' ' + t("Online, les regles i el nivell els tria l'amfitrió.") : ''}</p>` : '');
   return `<h2>${t('Opcions')}</h2><div class="tabs">${tabs}</div>${body}<div class="row"><button class="btn pri" onclick="closeModal()">${t('Tancar')}</button></div>`;
 }
+// ---------- «Busca actualitzacions» a «Quant a»: només dins del programa de Windows (xoriguer-actualitza-preload.js)
+// o de l'app d'Android (connector XoriguerAvis). A la web no cal: s'actualitza sola.
+const XACT = { ca: 'Busca actualitzacions', es: 'Buscar actualizaciones', fr: 'Rechercher des mises à jour', en: 'Check for updates' };
+function xactPot() { const C = window.Capacitor; return !!(window.xoriguerEscriptori || (C && C.isNativePlatform && C.isNativePlatform() && C.Plugins && C.Plugins.XoriguerAvis)); }
+function xactBoto() { return xactPot() ? `<p style="text-align:center"><button class="btn" onclick="xactBusca()">🔄 ${XACT[LANG] || XACT.ca}</button></p>` : ''; }
+function xactBusca() { try { if (window.xoriguerEscriptori) window.xoriguerEscriptori.busca(); else window.Capacitor.Plugins.XoriguerAvis.comprova(); } catch (e) { /* res */ } }
 function aboutHtml() {
   return `<div style="text-align:center"><img src="img/logo.jpg" style="width:180px;border-radius:12px"><div class="big">Dòmino · Xoriguer</div>
   <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xavier Musté.')}</p>
-  <p class="mutd">${t('So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).')}</p></div>`;
+  <p class="mutd">${t('So de fons: «Small restaurant atmosphere» (freesound_community, Pixabay).')}</p>${xactBoto()}</div>`;
 }
 function stats() { try { return JSON.parse(store.get('dom_stats', '{}')) || {}; } catch (e) { return {}; } }
 function addStat(k, n = 1) { const s = stats(); s[k] = (s[k] || 0) + n; store.set('dom_stats', JSON.stringify(s)); }
