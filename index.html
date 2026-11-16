@@ -996,7 +996,9 @@ function optHtml() {
 const XACT = { ca: 'Busca actualitzacions', es: 'Buscar actualizaciones', fr: 'Rechercher des mises à jour', en: 'Check for updates' };
 function xactPot() { const C = window.Capacitor; return !!(window.xoriguerEscriptori || (C && C.isNativePlatform && C.isNativePlatform() && C.Plugins && C.Plugins.XoriguerAvis)); }
 function xactBoto() { return xactPot() ? `<p style="text-align:center"><button class="btn" onclick="xactBusca()">🔄 ${XACT[LANG] || XACT.ca}</button></p>` : ''; }
-function xactBusca() { try { if (window.xoriguerEscriptori) window.xoriguerEscriptori.busca(); else window.Capacitor.Plugins.XoriguerAvis.comprova(); } catch (e) { /* res */ } }
+function xactBusca() { try { if (window.xoriguerEscriptori) window.xoriguerEscriptori.busca(LANG); else window.Capacitor.Plugins.XoriguerAvis.comprova({ idioma: LANG }); } catch (e) { /* res */ } }
+// l'idioma del joc, perquè l'avís automàtic d'actualització també surti en aquest idioma
+setTimeout(() => { try { const C = window.Capacitor; if (window.xoriguerEscriptori && window.xoriguerEscriptori.idioma) window.xoriguerEscriptori.idioma(LANG); else if (C && C.Plugins && C.Plugins.XoriguerAvis) C.Plugins.XoriguerAvis.idioma({ idioma: LANG }); } catch (e) { /* res */ } }, 1500);
 function aboutHtml() {
   return `<div style="text-align:center"><img src="img/logo.jpg" style="width:180px;border-radius:12px"><div class="big">Dòmino · Xoriguer</div>
   <p class="mutd">${t('Versió')} ${APP_VERSION} · ${APP_DATE}</p><p>${t('Creat per Xavier Musté.')}</p>
